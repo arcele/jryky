@@ -9,17 +9,17 @@
 	Logo.layer = new Kinetic.Layer();
 
 	// Circles
-	Logo.dotGroupA = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:125, y:125}});
-	Logo.dotGroupB = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:125, y:125}});
-	for(var i = 0; i < 10; i++) {		
-		for(var j = 0; j < 10; j++) {
+	Logo.dotGroupA = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:125}});
+	Logo.dotGroupB = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:125}, rotate:180});
+	for(var i = 0; i < 20; i++) {		
+		for(var j = 0; j < 20; j++) {
 			var circle = new Kinetic.Circle( {
 				radius: 10,
 				fill: Math.floor(Math.random() * 2) == 1 ? '#2F2669' : '#BF4799',
 				strokeWidth: 0,
 				opacity: .3 + Math.random() / 5,
-				x: i * 25 + Math.random() * 10,
-				y: j * 25 + Math.random() * 5
+				x: i * 35 + Math.random() * 10,
+				y: j * 35 + Math.random() * 5
 			} );
 			Math.floor(Math.random() * 2)  == 1 ? Logo.dotGroupA.add(circle) : Logo.dotGroupB.add(circle);
 		}
@@ -45,8 +45,8 @@
 	Logo.rotateDots = new Kinetic.Animation(
 		function(frame) {
 			var angleDiff = frame.timeDiff * Logo.angularSpeed / 1000;
-			Logo.dotGroupA.rotate(.7 * angleDiff);
-			Logo.dotGroupB.rotate(2 * angleDiff);
+			Logo.dotGroupA.rotate(.3 * angleDiff);
+			Logo.dotGroupB.rotate(angleDiff);
 		}, Logo.layer
 	);
 	Logo.rotateDots.start();
