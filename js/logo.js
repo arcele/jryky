@@ -29,11 +29,22 @@
 	Logo.stage.add(Logo.layer);
 
 
+	Logo.title = new Kinetic.Text( {
+		x:Logo.stage.getWidth() /2 - 85,
+		y:30,
+		text: 'j.ryan kelley',
+		fontSize:35,
+		fontFamily: 'Calibri',
+		fill: '#aeaeae',
+		opacity: .8
+	} );
+	Logo.layer.add(Logo.title);
+	
 	// ANIMATIONS
+	Logo.angularSpeed = 360 / 75;
 	Logo.rotateDots = new Kinetic.Animation(
 		function(frame,x) {
-			var angularSpeed = 360 / 75;
-			var angleDiff = frame.timeDiff * angularSpeed / 1000;
+			var angleDiff = frame.timeDiff * Logo.angularSpeed / 1000;
 			Logo.dotGroupA.rotate(angleDiff);
 			Logo.dotGroupB.rotate(-1 * angleDiff);
 		}, Logo.layer
