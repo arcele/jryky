@@ -32,7 +32,7 @@
 	Logo.title = new Kinetic.Text( {
 		x:Logo.stage.getWidth() /2 - 85,
 		y:30,
-		text: 'j.ryan kelley',
+		text: 'j. ryan kelley',
 		fontSize:35,
 		fontFamily: 'Calibri',
 		fill: '#aeaeae',
@@ -43,7 +43,7 @@
 	// ANIMATIONS
 	Logo.angularSpeed = 360 / 75;
 	Logo.rotateDots = new Kinetic.Animation(
-		function(frame,x) {
+		function(frame) {
 			var angleDiff = frame.timeDiff * Logo.angularSpeed / 1000;
 			Logo.dotGroupA.rotate(.7 * angleDiff);
 			Logo.dotGroupB.rotate(2 * angleDiff);
@@ -51,14 +51,40 @@
 	);
 	Logo.rotateDots.start();
 
+	Logo.expandTitleFont = new Kinetic.Animation(
+		function(frame) {
+			if(Logo.title.getFontSize() >= 50) {
+				return false;
+				this.stop();
+			}
+			Logo.title.fontSize(Logo.title.getFontSize() + 3);
+			Logo.title.setX(Logo.title.getX() - 5);
+		}
+	);
+	Logo.compressTitleFont = new Kinetic.Animation(
+		function(frame) {
+			if(Logo.title.getFontSize() <= 35) {
+				return false;
+				this.stop();
+			}
+			Logo.title.fontSize(Logo.title.getFontSize() - 6);
+			Logo.title.setX(Logo.title.getX() + 10)
+		}
+	);
+
 	// EVENTS
 	Logo.title.on( 'mouseover click', function() {
-		Logo.angularSpeed = 360 / 10;
-		Logo.title.fill('#dacada');
+		Logo.angularSpeed = 360 / 30;
+		Logo.compressTitleFont.stop();
+		Logo.expandTitleFont.start();
+		Logo.title.fill('#eadaea');
 	} );
 	Logo.title.on( 'mouseout', function() {
 		Logo.angularSpeed = 360 / 75;
+		Logo.expandTitleFont.stop();
+		Logo.compressTitleFont.start();
 		Logo.title.fill('#aeaeae');
+
 	})
 
 })();
