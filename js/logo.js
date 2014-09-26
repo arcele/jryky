@@ -45,8 +45,8 @@
 	Logo.rotateDots = new Kinetic.Animation(
 		function(frame,x) {
 			var angleDiff = frame.timeDiff * Logo.angularSpeed / 1000;
-			Logo.dotGroupA.rotate(angleDiff);
-			Logo.dotGroupB.rotate(-1 * angleDiff);
+			Logo.dotGroupA.rotate(.7 * angleDiff);
+			Logo.dotGroupB.rotate(2 * angleDiff);
 		}, Logo.layer
 	);
 	Logo.rotateDots.start();
