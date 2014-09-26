@@ -51,6 +51,14 @@
 	);
 	Logo.rotateDots.start();
 
-
+	// EVENTS
+	Logo.title.on( 'mouseover click', function() {
+		Logo.angularSpeed = 360 / 10;
+		Logo.title.fill('#dacada');
+	} );
+	Logo.title.on( 'mouseout', function() {
+		Logo.angularSpeed = 360 / 75;
+		Logo.title.fill('#aeaeae');
+	})
 
 })();
