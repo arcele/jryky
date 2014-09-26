@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
 // Count the visit, okay?
-if($_GET['skip'] == null) {
+if($_GET && $_GET['skip'] == null) {
   $connection = mysql_connect('localhost', 'jryankel_jryky', '$)AA39_-q!');
   if(!$connection) {
     // Can't connect?  Don't bail, we're only trying to log the users who hit the site.
