@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<?
-
+<?php
 // Count the visit, okay?
 if($_GET['skip'] == null) {
   $connection = mysql_connect('localhost', 'jryankel_jryky', '$)AA39_-q!');
@@ -20,7 +19,7 @@ if($_GET['skip'] == null) {
     <title>J. Ryan Kelley</title>
     <meta name="description" content="Personal play space for J. Ryan Kelley, some guy who builds interent stuff." />
     <meta name="keywords" content="James Kelley, James Ryan Kelley, Ryan Kelley, web development, javascript, HTML5, rails, coconut water" />
-    <script src="js/jquery.js"></script>
+    <script src="js/jquery-2.0.2.min.js"></script>
     <script src="js/kinetic.js"></script>
     <script src="js/jryky.js"></script>
     <link href="css/jryky.css" rel="stylesheet" type="text/css" />
