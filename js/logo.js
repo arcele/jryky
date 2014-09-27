@@ -9,17 +9,17 @@
 	Logo.layer = new Kinetic.Layer();
 
 	// Circles
-	Logo.dotGroupA = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:125}});
-	Logo.dotGroupB = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:125}, rotate:180});
-	for(var i = 0; i < 20; i++) {		
-		for(var j = 0; j < 20; j++) {
+	Logo.dotGroupA = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:350}});
+	Logo.dotGroupB = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:350}, rotate:180});
+	for(var i = 0; i < 15; i++) {		
+		for(var j = 0; j < 15; j++) {
 			var circle = new Kinetic.Circle( {
 				radius: 10,
 				fill: Math.floor(Math.random() * 2) == 1 ? '#2F2669' : '#BF4799',
 				strokeWidth: 0,
 				opacity: .3 + Math.random() / 5,
-				x: i * 35 + Math.random() * 10,
-				y: j * 35 + Math.random() * 5
+				x: i * 50 + Math.random() * 15,
+				y: j * 50 + Math.random() * 15
 			} );
 			Math.floor(Math.random() * 2)  == 1 ? Logo.dotGroupA.add(circle) : Logo.dotGroupB.add(circle);
 		}
