@@ -182,14 +182,6 @@ a:hover {
  margin:9px 0px;
 }
 
-
-#subfooter {
-    width: 110%;
-    margin: 0 -10px -5px -10px;
-    background: url(../img/subfoot.png);
-    height:110px;
-}
-
 .mouseover-detail {
     position:absolute;
     z-index:4;
