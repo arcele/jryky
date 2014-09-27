@@ -86,15 +86,15 @@
 	);
 
 	// EVENTS
-	Logo.angularSpeedMultiplier = 5;
+	Logo.angularSpeedMultiplier = 10;
 	Logo.title.on( 'mouseover click', function() {
-		Logo.angularSpeed *= Logo.angularSpeedMultiplier;
+		Logo.angularSpeed /= Logo.angularSpeedMultiplier;
 		Logo.compressTitleFont.stop();
 		Logo.expandTitleFont.start();
 		Logo.title.fill('#eadaea');
 	} );
 	Logo.title.on( 'mouseout', function() {
-		Logo.angularSpeed /= Logo.angularSpeedMultiplier;
+		Logo.angularSpeed *= Logo.angularSpeedMultiplier;
 		Logo.expandTitleFont.stop();
 		Logo.compressTitleFont.start();
 		Logo.title.fill('#aeaeae');
