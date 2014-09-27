@@ -26,12 +26,7 @@ if($_GET && $_GET['skip'] == null) {
   </head>
   <body>
     <div id="header"></div>
-    <section id="social_links">
-      <a href="http://twitter.com/arcele" target="_out" title="twitter"><div class="social twitter"></div></a>
-      <a href="http://facebook.com/jryankelley" target="_out" title="facebook"><div class="social facebook"></div></a>
-      <a href="http://linkedin.com/in/jryankelley" target="_out" title="LinkedIn"><div class="social linkedin"></div></a>
-      <a href="mailto:ryan@jryky.com" title="e-mail"><div class="social email"></div></a>
-    </section>
+    <div id="cover"></div>
 
     <div id="content">
       <section class="blurb">
@@ -52,7 +47,7 @@ if($_GET && $_GET['skip'] == null) {
       <section class="blurb">
 	<p>If you want to know more, or you just want to go grab a beer with me to catch a birds game, <a href="mailto:ryan@jryky.com">shoot me an e-mail</a>
       </section>
-    </div>
+	</div>
 
     <div id="footer">
       &copy;2013 <a href="mailto:ryan@jryky.com">j. ryan kelley </a> | <a href="http://twitter.com/arcele" target="_out">twitter</a> | <a href="http://facebook.com/jryankelley" target="_out">facebook</a> | <a href="http://linkedin.com/in/jryankelley" target="_out">LinkedIn</a> | <a href="http://github.com/arcele" target="_out">GitHub</a>

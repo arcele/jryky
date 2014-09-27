@@ -4,7 +4,7 @@
 	Logo.stage = new Kinetic.Stage( { 
 		container: 'header',
 		width: window.innerWidth,
-		height: 110
+		height: 160
 	} );
 	Logo.layer = new Kinetic.Layer();
 
