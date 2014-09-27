@@ -18,6 +18,9 @@ body {
       box-shadow: -1px 5px 10px rgba(0, 0, 0, 0.25);
       -moz-box-shadow: -1px 5px 10px rgba(0, 0, 0, 0.25);
       background-color: #212121;
+      position:fixed;
+      top:0;
+      width:100%;
 }
 
 #bio {
@@ -53,7 +56,7 @@ body {
        background: linear-gradient(to bottom, rgba(30,124,153,1) 0%,rgba(0,51,204,1) 100%);
 
        position:absolute;
-       top:115px;
+       top:105px;
        margin-left:auto;
        margin-right:auto;
        left:0;
@@ -117,9 +120,8 @@ body {
     font-size:11pt;
     width:780px;
     margin:auto;
-    margin-top:60px;
     top: 140px;
-    overflow:auto;
+    margin-top:160px;
 }
 
 a:visited {
@@ -205,11 +207,11 @@ a:hover {
 
 @keyframes navDrop {
 	   0% { top:20px; }
-	   100% { top: 115px; }
+	   100% { top: 105px; }
 }
 @-webkit-keyframes navDrop {
 		   0% { top: 20px; }
-		   100% { top: 115px; } 
+		   100% { top: 105px; } 
 }
 
 @keyframes fadeIn {
