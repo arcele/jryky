@@ -14,7 +14,7 @@
 	for(var i = 0; i < 15; i++) {		
 		for(var j = 0; j < 15; j++) {
 			var circle = new Kinetic.Circle( {
-				radius: 10,
+				radius: 10 + Math.random() * 6,
 				fill: Math.floor(Math.random() * 2) == 1 ? '#2F2669' : '#BF4799',
 				strokeWidth: 0,
 				opacity: .3 + Math.random() / 5,
