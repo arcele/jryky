@@ -37,7 +37,7 @@ if($_GET && $_GET['skip'] == null) {
       <section class="blurb">
 	<div class="profile_pic"></div>
         <p>I'm Ryan.  I like to build stuff. Not chairs, or tables, or bookshelves, I like to build the stuff that makes your phone do that cool thing, or that lets you get access to the data you need in a fun way.  I'm a web developer, currently based out of Seattle, originally from Delaware.  And I've been doing this kind of stuff for fun since 1998 and professionally since 2003.</p>
-<p>I've worked with all sorts of technologies over the years on all different platforms.  PHP in Solaris?  Yup.  Rails in FreeBSD?  You know it.  HTML5 and CSS3 Development in Windows, OSX, and Ubuntu?  Of course.  I've even done some sysadmin work in Solaris, but, I really like creating tools with intuitive user interfaces.  Here's some highlights of the work that I've done</p>
+<p>I've worked with all sorts of technologies over the years on all different platforms.  PHP in Solaris?  Yup.  Rails in FreeBSD?  You know it.  HTML5 and CSS3 Development in Windows, OSX, and Ubuntu?  Of course.  I've even done some sysadmin work in Solaris, but, I really like creating tools with intuitive user interfaces.</p>
       </section>      
 
       <section class="blurb">
