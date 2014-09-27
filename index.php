@@ -16,7 +16,7 @@ if($_GET && $_GET['skip'] == null) {
 ?>
 <html>
   <head>
-    <title>J. Ryan Kelley</title>
+    <title>J. Ryan Kelley - Web Developer</title>
     <meta name="description" content="Personal play space for J. Ryan Kelley, some guy who builds interent stuff." />
     <meta name="keywords" content="James Kelley, James Ryan Kelley, Ryan Kelley, web development, javascript, HTML5, rails, coconut water" />
     <script src="js/jquery-2.0.2.min.js"></script>
