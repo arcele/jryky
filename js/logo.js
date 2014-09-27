@@ -19,7 +19,7 @@
 		y:50, 
 		offset: {x:350, y:350}
 	} );
-	
+
 	for(var i = 0; i < 15; i++) {		
 		for(var j = 0; j < 15; j++) {
 			var circle = new Kinetic.Circle( {
@@ -50,7 +50,7 @@
 	Logo.layer.add(Logo.title);
 	
 	// ANIMATIONS
-	Logo.angularSpeed = 360 / 75;
+	Logo.angularSpeed = 360 / 150;
 	Logo.rotateDots = new Kinetic.Animation(
 		function(frame) {
 			var angleDiff = frame.timeDiff * Logo.angularSpeed / 1000;
