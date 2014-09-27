@@ -37,6 +37,10 @@
 	Logo.layer.add(Logo.dotGroupB);
 	Logo.stage.add(Logo.layer);
 
+	Logo.dotGroupA.setRotation(Math.random() * 360);
+	Logo.dotGroupB.setRotation(Math.random() * 360);
+	Logo.dotGroupA.draw();
+	Logo.dotGroupB.draw();
 
 	Logo.title = new Kinetic.Text( {
 		x:Logo.stage.getWidth() /2 - 85,
