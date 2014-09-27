@@ -55,7 +55,7 @@ if($_GET && $_GET['skip'] == null) {
     </div>
 
     <div id="footer">
-      &copy;2013 <a href="mailto:ryan@jryky.com">j. ryan kelley </a> | <a href="http://twitter.com/arcele">twitter</a> | <a href="http://facebook.com/jryankelley">facebook</a> | <a href="http://linkedin.com/in/jryankelley">LinkedIn</a>
+      &copy;2013 <a href="mailto:ryan@jryky.com">j. ryan kelley </a> | <a href="http://twitter.com/arcele" target="_out">twitter</a> | <a href="http://facebook.com/jryankelley" target="_out">facebook</a> | <a href="http://linkedin.com/in/jryankelley" target="_out">LinkedIn</a> | <a href="http://github.com/arcele" target="_out">GitHub</a>
     </div>
     <div id="subfooter"></div>
 
