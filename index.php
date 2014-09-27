@@ -40,19 +40,6 @@ if($_GET && $_GET['skip'] == null) {
 <p>I've worked with all sorts of technologies over the years on all different platforms.  PHP in Solaris?  Yup.  Rails in FreeBSD?  You know it.  HTML5 and CSS3 Development in Windows, OSX, and Ubuntu?  Of course.  I've even done some sysadmin work in Solaris, but, I really like creating tools with intuitive user interfaces.  Here's some highlights of the work that I've done</p>
       </section>      
 
-      <section class="topic">Professional</section>
-      <section class="blurb">
-<p>Here are some highlights from my professional career.</p>
-<ul>
-        <li><img src="http://jryky.com/img/truck.png" />In January, 2006 I completed the design, development, and implementation of <a href="https://web.archive.org/web/20070209072409/http://www.trinitytransport.com/" target="_out">the corporate website</a> for Trinity Logistics, then Trinity Transport.  The site, developed in PHP, was used through 2010 as a the face of the company.  On top of standard content, and a custom cms, the site allowed customers to log in and view their payment information.  I integrated the operational system's FilePro database with the MySQL database which also allowed users to generate invoices on the fly with real time data.</li>
-   <li><img src="http://jryky.com/img/ffl.png" />One of the most important peices of ESPN Fantasy Games is live scoring, a portion of the game that I've played a very heavy role in.  I built <a href="http://games.espn.go.com/ffl/fantasycast#leagueId=128&teamId=1" target="_out">Fantasy Football Fantasycast</a> and <a href="http://games.espn.go.com/fba/fantasycast#leagueId=115&teamId=16" target="_out">Fantasy Basketball Fantasycast</a>, two of our most used pages.  I also build the <a href="http://games.espn.go.com/flb/clubhouse?leagueId=123&teamId=1" target="_out">RotoLine module</a> for a different way to look at the standings of your rotisserie leagues.</li>
-<li><img src="http://jryky.com/img/insider.png" />I've also built several insider tools for Fantasy Games.  Our lineup recommendation and free agency recommendations have been among the highest upsellers of insider subscriptions sitewide, and have also resulted in a software patent.</li>
-   <li><img src="http://jryky.com/img/iphone.png" />In 2013, we released an all new iOS app which we then released in 2014 for Android.  My primary responsibility in the app was transaction implementation including roster management, trades, and free agency acquisitions.  The app won the <a href="http://www.webbyawards.com/winners/2013/mobile-apps/tablet-and-all-other-devices/games-tablet-all-other-devices/espn-fantasy-football-app">2013 Webby Award for Best Games Tablet App</a>.
-</ul>
-
-      </section>
-
-      <section class="topic">Personal</section>
       <section class="blurb">
 	<p>Here's some stuff that I'm building now to play with technologies and keep sharp.</p>
 	<ul>
