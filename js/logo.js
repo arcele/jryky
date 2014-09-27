@@ -9,8 +9,17 @@
 	Logo.layer = new Kinetic.Layer();
 
 	// Circles
-	Logo.dotGroupA = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:350}});
-	Logo.dotGroupB = new Kinetic.Group({x: Logo.stage.getWidth() / 2, y:50, offset: {x:350, y:350}, rotate:180});
+	Logo.dotGroupA = new Kinetic.Group( {
+		x: Logo.stage.getWidth() / 2, 
+		y:50, 
+		offset: {x:350, y:350}
+	} );
+	Logo.dotGroupB = new Kinetic.Group( {
+		x: Logo.stage.getWidth() / 2, 
+		y:50, 
+		offset: {x:350, y:350}
+	} );
+	
 	for(var i = 0; i < 15; i++) {		
 		for(var j = 0; j < 15; j++) {
 			var circle = new Kinetic.Circle( {
