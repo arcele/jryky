@@ -9,7 +9,7 @@ if(!$_GET || $_GET['skip'] == null) {
   } else {
     mysql_select_db('jryankel_jryky');
     $result = mysql_query("INSERT into hits(ip, referer) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', '". $_SERVER['HTTP_REFERER'] ."');");
-    echo "<!-- INSERT into hits(ip, referer) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', '". $_SERVER['HTTP_REFERER'] ."');-->";
+    //    echo "<!-- INSERT into hits(ip, referer) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', '". $_SERVER['HTTP_REFERER'] ."');-->";
     mysql_close($connection);
   }
 }
