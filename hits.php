@@ -1,5 +1,6 @@
 <?
-$connection = mysql_connect('localhost', 'jryankel_jryky', '$)AA39_-q!');
+include_once('config/database.php');  // Config file contains $database declaraion
+$connection = mysql_connect($database['server'], $database['login'], $database['password']);
 if(!$connection) {
   die("Can't connect to db. ". mysql_error());
 }
