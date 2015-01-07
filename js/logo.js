@@ -1,6 +1,19 @@
 (function() {
 
 	Logo = {};
+
+	Logo.config = {
+		LOGO_COLOR: "#CFCFCF",
+		ZOOMED_LOGO_COLOR: "#EFEFFF",
+		LOGO_TEXT_FONT_SIZE: 30,
+		LOGO_TEXT_MAX_SIZE: 60,
+		LOGO_TEXT_OPACITY: .8,
+		DOT_ANGULAR_SPEED_MULTIPLIER: 10,
+		DOT_ROTATION_SPEED: 360 / 150000,
+		DOT_PRIMARY_COLOR: "#2F2669",
+		DOT_SECONDARY_COLOR: "#BF4799"
+	};
+
 	Logo.stage = new Kinetic.Stage( { 
 		container: 'header',
 		width: window.innerWidth,
@@ -24,7 +37,7 @@
 		for(var j = 0; j < 15; j++) {
 			var circle = new Kinetic.Circle( {
 				radius: 10 + Math.random() * 6,
-				fill: Math.floor(Math.random() * 2) == 1 ? '#2F2669' : '#BF4799',
+				fill: Math.floor(Math.random() * 2) == 1 ? Logo.config.DOT_PRIMARY_COLOR : Logo.config.DOT_SECONDARY_COLOR,
 				strokeWidth: 0,
 				opacity: .3 + Math.random() / 5,
 				x: i * 50 + Math.random() * 15,
@@ -43,21 +56,21 @@
 	Logo.dotGroupB.draw();
 
 	Logo.title = new Kinetic.Text( {
-		x:Logo.stage.getWidth() /2 - 85,
-		y:30,
+		x: Logo.stage.getWidth() / 2 - 85,
+		y: 30,
 		text: 'j. ryan kelley',
-		fontSize:35,
+		fontSize: Logo.config.LOGO_TEXT_FONT_SIZE,
 		fontFamily: 'Calibri',
-		fill: '#aeaeae',
-		opacity: .8
+		fill: Logo.config.LOGO_COLOR,
+		opacity: Logo.config.LOGO_TEXT_OPACITY
 	} );
 	Logo.layer.add(Logo.title);
 	
 	// ANIMATIONS
-	Logo.angularSpeed = 360 / 150;
+	Logo.angularSpeed = Logo.config.DOT_ROTATION_SPEED;
 	Logo.rotateDots = new Kinetic.Animation(
 		function(frame) {
-			var angleDiff = frame.timeDiff * Logo.angularSpeed / 1000;
+			var angleDiff = frame.timeDiff * Logo.angularSpeed;
 			Logo.dotGroupA.rotate(.3 * angleDiff);
 			Logo.dotGroupB.rotate(angleDiff);
 		}, Logo.layer
@@ -66,7 +79,7 @@
 
 	Logo.expandTitleFont = new Kinetic.Animation(
 		function(frame) {
-			if(Logo.title.getFontSize() >= 50) {
+			if(Logo.title.getFontSize() >= Logo.config.LOGO_TEXT_MAX_SIZE) {
 				return false;
 				this.stop();
 			}
@@ -86,19 +99,17 @@
 	);
 
 	// EVENTS
-	Logo.angularSpeedMultiplier = 10;
 	Logo.title.on( 'mouseover click', function() {
-		Logo.angularSpeed /= Logo.angularSpeedMultiplier;
+		Logo.angularSpeed /= Logo.config.DOT_ANGULAR_SPEED_MULTIPLIER;
 		Logo.compressTitleFont.stop();
 		Logo.expandTitleFont.start();
-		Logo.title.fill('#eadaea');
+		Logo.title.fill(Logo.config.ZOOMED_LOGO_COLOR);
 	} );
 	Logo.title.on( 'mouseout', function() {
-		Logo.angularSpeed *= Logo.angularSpeedMultiplier;
+		Logo.angularSpeed *= Logo.config.DOT_ANGULAR_SPEED_MULTIPLIER;
 		Logo.expandTitleFont.stop();
 		Logo.compressTitleFont.start();
-		Logo.title.fill('#aeaeae');
-
+		Logo.title.fill(Logo.config.LOGO_COLOR);
 	})
 
 })();
