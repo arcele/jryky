@@ -2,7 +2,9 @@
 <?php
 // Count the visit, okay?
 if(!$_GET || $_GET['skip'] == null) {
-  $connection = mysql_connect('localhost', 'jryankel_jryky', '$)AA39_-q!');
+  include_once('config/database.php');  // Config file contains $database declaraion
+  //  $connection = mysql_connect('localhost', 'jryankel_jryky', '$)AA39_-q!');
+  $connection = mysql_connect($database['server'], $database['login'], $database['password']);
   if(!$connection) {
     // Can't connect?  Don't bail, we're only trying to log the users who hit the site.
     echo "<!-- ERROR:" . mysql_error() . " -->";
