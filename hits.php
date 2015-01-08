@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('config/database.php');  // Config file contains $database declaraion
 $connection = mysql_connect($database['server'], $database['login'], $database['password']);
 if(!$connection) {
@@ -16,7 +16,4 @@ while($row = mysql_fetch_assoc($query)) {
 }
 mysql_close($connection);
 echo '</table>';
-
 ?>
-
-

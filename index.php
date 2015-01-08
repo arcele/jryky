@@ -1,21 +1,4 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<?php
-// Count the visit, okay?
-if(!$_GET || $_GET['skip'] == null) {
-  include_once('config/database.php');  // Config file contains $database declaraion
-  $connection = mysql_connect($database['server'], $database['login'], $database['password']);
-  if(!$connection) {
-    // Can't connect?  Don't bail, we're only trying to log the users who hit the site.
-    echo "<!-- ERROR:" . mysql_error() . " -->";
-  } else {
-    mysql_select_db('jryankel_jryky');
-    $result = mysql_query("INSERT into hits(ip, referer) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', '". $_SERVER['HTTP_REFERER'] ."');");
-    //    echo "<!-- INSERT into hits(ip, referer) VALUES ('". $_SERVER['REMOTE_ADDR'] ."', '". $_SERVER['HTTP_REFERER'] ."');-->";
-    mysql_close($connection);
-  }
-}
-
-?>
 <html>
   <head>
     <title>J. Ryan Kelley - Web Developer</title>
@@ -27,6 +10,10 @@ if(!$_GET || $_GET['skip'] == null) {
     <link href="css/jryky.css?v=2" rel="stylesheet" type="text/css" />
   </head>
   <body>
+<?php  	
+	include_once('config/database.php');
+	include_once('util/analytics.php'); 
+?>
     <div id="header"></div>
     <div id="cover"></div>
 
