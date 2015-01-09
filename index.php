@@ -6,7 +6,8 @@
     <meta name="keywords" content="James Kelley, James Ryan Kelley, Ryan Kelley, web development, javascript, HTML5, rails, coconut water" />
     <script src="js/jquery-2.0.2.min.js"></script>
     <script src="js/kinetic.js"></script>
-    <script src="js/jryky.js?v=2"></script>
+	<script src="js/jryky.js?v=2"></script>
+	<script src="js/logo.js"></script>
     <link href="css/jryky.css?v=2" rel="stylesheet" type="text/css" />
   </head>
   <body>
