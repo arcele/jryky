@@ -91,7 +91,7 @@ var Logo;
 				}
 				this.title.fontSize(this.title.getFontSize() + 3);
 				this.title.setX(this.title.getX() - 5);
-			}
+			}.bind(this)
 		);
 		this.compressTitleFont = new Kinetic.Animation(
 			function(frame) {
@@ -101,7 +101,7 @@ var Logo;
 				}
 				this.title.fontSize(this.title.getFontSize() - 6);
 				this.title.setX(this.title.getX() + 10)
-			}
+			}.bind(this)
 		);
 
 		// EVENTS
@@ -110,13 +110,13 @@ var Logo;
 			this.compressTitleFont.stop();
 			this.expandTitleFont.start();
 			this.title.fill(this.config.ZOOMED_LOGO_COLOR);
-		} );
+		}.bind(this));
 		this.title.on( 'mouseout', function() {
 			this.angularSpeed *= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
 			this.expandTitleFont.stop();
 			this.compressTitleFont.start();
 			this.title.fill(this.config.LOGO_COLOR);
-		});
+		}.bind(this));
 	};
 
 })();
