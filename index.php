@@ -21,6 +21,7 @@
         <a href="http://twitter.com/arcele" target="_twit">twit</a>
         <a href="http://facebook.com/jryankelley" target="_face">book</a>
         <a href="http://github.com/arcele" target="_git">git</a>
+        <a href="http://linkedin.com/in/jryankelley" target="_linked">link</a>
         <a href="mailto:ryan@jryky.com">mail</a>
       </div>
     </div>
