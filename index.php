@@ -18,11 +18,10 @@
     <div id="header"></div>
     <div id="subnav">
       <div id="links">
-        <a href="#">twit</a>
-        <a href="#">book</a>
-        <a href="#">git</a>
-        <a href="#">link</a>
-        <a href="#">mail</a>
+        <a href="http://twitter.com/arcele" target="_twit">twit</a>
+        <a href="http://facebook.com/jryankelley" target="_face">book</a>
+        <a href="http://github.com/arcele" target="_git">git</a>
+        <a href="mailto:ryan@jryky.com">mail</a>
       </div>
     </div>
     <div id="content">
