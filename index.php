@@ -16,8 +16,6 @@
 	include_once('util/analytics.php'); 
 ?>
     <div id="header"></div>
-    <div id="cover"></div>
-
     <div id="content">
       <section class="blurb">
 	<div class="profile_pic"></div>
