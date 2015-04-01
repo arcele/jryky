@@ -17,10 +17,17 @@ body {
 }
 
 #subnav {
+	background:#212121;
+	position:fixed;
 	height:42px;
+	top:50px;
 	width:100%;
-	margin-top:100px;
-	z-index:4;
+	z-index:2;
+	-webkit-transform: translate(0, 50px);
+	-ms-transform: translate(0, 50px);
+	transform: translate(0, 50px);
+	-webkit-transition: all .75s ease-out;
+	transition: all .75s ease-out;
 }
 
 #subnav #links {
@@ -84,7 +91,7 @@ body {
 	font-size:11pt;
 	width:780px;
 	margin:auto;
-	margin-top:70px;
+	margin-top:150px;
 	color:#999;
 	z-index:2;
 }
