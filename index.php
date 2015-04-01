@@ -16,6 +16,15 @@
 	include_once('util/analytics.php'); 
 ?>
     <div id="header"></div>
+    <div id="subnav">
+      <div id="links">
+        <a href="#">twit</a>
+        <a href="#">book</a>
+        <a href="#">git</a>
+        <a href="#">link</a>
+        <a href="#">mail</a>
+      </div>
+    </div>
     <div id="content">
       <section class="blurb">
 	<div class="profile_pic"></div>
