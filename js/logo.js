@@ -23,7 +23,6 @@ var Logo;
 		this.stage = new Kinetic.Stage( { 
 			container: 'header',
 			width: window.innerWidth,
-			height: 160
 		} );
 		this.layer = new Kinetic.Layer();
 
