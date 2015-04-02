@@ -28,8 +28,7 @@
     <div id="content">
       <section class="blurb">
 	<div class="profile_pic"></div>
-        <p>I'm Ryan.  I like to build stuff. Not chairs, or tables, or bookshelves, I like to build the stuff that makes your phone do that cool thing, or that lets you get access to the data you need in a fun way.  I'm a web developer, currently based out of Seattle, originally from Delaware.  And I've been doing this kind of stuff for fun since 1998 and professionally since 2003.</p>
-<p>I've worked with all sorts of technologies over the years on all different platforms.  PHP in Solaris?  Yup.  Rails in FreeBSD?  You know it.  HTML5 and CSS3 Development in Windows, OSX, and Ubuntu?  Of course.  I've even done some sysadmin work in Solaris, but, I really like creating tools with intuitive user interfaces.</p>
+        <p>I'm Ryan.  I like to build stuff on the internet. I'm a front end engineer, currently based out of Seattle, originally from Delaware.  I've been doing this kind of stuff for fun since 1998 and professionally since 2003.</p>
       </section>      
 
       <section class="blurb">
@@ -38,7 +37,8 @@
 	  <li><a href="http://www.cochl.com" target="_cochl"><img src="img/bass.jpg" />Tab Entry</a>.  Direct canvas manipulation using <a href="http://jquery.com/" target="_out">jQuery</a> to allow users to enter Guitar/Bass tabs.  Click on the strings to add notes, keep clicking the same note to increment the fret.  If you don't know anything about Tablature, <a href="http://en.wikipedia.org/wiki/Tablature" target="_out">learn more here</a>.</li>
 	  <li><a href="http://www.nwbhf.com" target="nwbhf"><img src="img/bubblehockey.jpg" />Bubble Hockey.</a> Bubble hockey game using <a href="http://kineticjs.com/" target="_out">KineticJS</a> to interact with the canvas object.</li> 
 	  <li><img src="img/logobuilder.PNG" /><a href="http://www.retirethe5.com" target="_retire5">Logo Displayer</a>. Displays an HTML5 team logo that can be used cross-platform to brand your team across all of your devices.  Written using <a href="http://kineticjs.com/" target="_out">KineticJS</a>.  Load it up and it will give you a random team logo, refresh for a new one, <a href="http://www.retirethe5.com/?&backStyle=habs&backColor=000088&foreColor=3333FF&logoLetter=W|V&fontColor=CFB53B&fontFamily=Calibri" target="_retire5">or, it will create logos with passed in parameters.</a></li>
-	</ul>
+	  <li><img src="img/grady.png" /><a href="http://www.wieddoggs.com" target="_dogs">Wieddoggs.com</a>, a website about my family's dogs that I put together for my Mom for her birthday.  It's all custom built with css animations and a very basic photo gallery.</li>
+  </ul>
       </section>
 
       <section class="blurb">
