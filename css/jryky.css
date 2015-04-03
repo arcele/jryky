@@ -20,14 +20,9 @@ body {
 	background:#212121;
 	position:fixed;
 	height:42px;
-	top:50px;
+	top:100px;
 	width:100%;
 	z-index:2;
-	-webkit-transform: translate(0, 50px);
-	transform: translate(0, 50px);
-	-webkit-transition: all .75s ease-out;
-	transition: all .75s ease-out;
-
 }
 
 #subnav #links {
@@ -49,8 +44,6 @@ body {
 	background:#2f2669;
 	border:2px solid #20135a;
 	overflow:hidden;
-	-webkit-transition: background .2s linear;
-	transition: background .2s linear;
 }
 
 #subnav a span.text {
@@ -73,11 +66,11 @@ body {
 }
 
 
-#subnav a:hover {
-	background:#20135a;
+#subnav #links a:hover {
+	background-color:#20135a;
 	color:#f3f3f3;
-	-webkit-transition: background .75s ease-in;
-	transition: background .75s ease-in;
+	-webkit-transition: all .75s ease-in;
+	transition: all .75s ease-in;
 }
 
 #subnav a:before {
