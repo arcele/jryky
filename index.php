@@ -18,17 +18,18 @@
     <div id="header"></div>
     <div id="subnav">
       <div id="links">
-        <a href="http://twitter.com/arcele" target="_twit"><span class="logo"><img src="img/social/twitter.png"></span><span class="text">twit</span></a>
-        <a href="http://facebook.com/jryankelley" target="_face"><span class="logo"><img src="img/social/facebook.png"></span><span class="text">book</span></a>
-        <a href="http://github.com/arcele" target="_git"><span class="logo"><img src="img/social/github.png"></span><span class="text">git</span></a>
-        <a href="http://linkedin.com/in/jryankelley" target="_linked"><span class="logo"><img src="img/social/linkedin.png" /></span><span class="text">link</span></a>
-        <a href="mailto:ryan@jryky.com"><span class="logo"><img src="img/social/email.png" /></span><span class="text">mail</span></a>
+        <a href="http://twitter.com/arcele" target="_twit"><span class="logo"><img src="img/social/twitter.png"></span><span class="text">twitter</span></a>
+        <a href="http://facebook.com/jryankelley" target="_face"><span class="logo"><img src="img/social/facebook.png"></span><span class="text">facebook</span></a>
+        <a href="http://github.com/arcele" target="_git"><span class="logo"><img src="img/social/github.png"></span><span class="text">github</span></a>
+        <a href="http://linkedin.com/in/jryankelley" target="_linked"><span class="logo"><img src="img/social/linkedin.png" /></span><span class="text">linkedin</span></a>
+        <a href="mailto:ryan@jryky.com"><span class="logo"><img src="img/social/email.png" /></span><span class="text">email</span></a>
       </div>
     </div>
     <div id="content">
       <section class="blurb">
-	<div class="profile_pic"></div>
+        <div class="profile_pic"></div>
         <p>I'm Ryan.  I like to build stuff on the internet. I'm a front end engineer, currently based out of Seattle, originally from Delaware.  I've been doing this kind of stuff for fun since 1998 and professionally since 2003.</p>
+        <p>It turns out that building stuff on the internet is actually pretty easy, there's great communities that have done a lot of the heavy lifting for developers everywhere.  When it comes to DOM manipulation <a href="https://jquery.com/">jQuery is king</a> and has been since, like, 2009.  When I first started playing with canvas manipulation, I chose <a href="http://kineticjs.com/" target="_new">Kinetic</a>.  Sadly, it's no longer maintained (although the final version is pretty solid) and all of the public docs got taken down.  It's still a pretty great chunk of code.  If you've got a reccomendation for a particularly sweet canvas library, <a href="mailto:ryan@jryky.com">hit me up</a>.</p>
       </section>      
 
       <section class="blurb">
@@ -47,7 +48,7 @@
 	</div>
 
     <div id="footer">
-      &copy;2013 <a href="mailto:ryan@jryky.com">j. ryan kelley </a> | <a href="http://twitter.com/arcele" target="_out">twitter</a> | <a href="http://facebook.com/jryankelley" target="_out">facebook</a> | <a href="http://linkedin.com/in/jryankelley" target="_out">LinkedIn</a> | <a href="http://github.com/arcele" target="_out">GitHub</a>
+      &copy;2015 <a href="mailto:ryan@jryky.com">j. ryan kelley </a> | <a href="http://twitter.com/arcele" target="_out">twitter</a> | <a href="http://facebook.com/jryankelley" target="_out">facebook</a> | <a href="http://linkedin.com/in/jryankelley" target="_out">LinkedIn</a> | <a href="http://github.com/arcele" target="_out">GitHub</a>
     </div>
   </body>
 </html>
