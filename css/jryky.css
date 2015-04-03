@@ -24,10 +24,10 @@ body {
 	width:100%;
 	z-index:2;
 	-webkit-transform: translate(0, 50px);
-	-ms-transform: translate(0, 50px);
 	transform: translate(0, 50px);
 	-webkit-transition: all .75s ease-out;
 	transition: all .75s ease-out;
+
 }
 
 #subnav #links {
@@ -35,7 +35,7 @@ body {
 	width:720px;
 }
 
-#subnav a {
+#subnav #links a {
 	float:left;
 	width:100px;
 	height:28px;
@@ -48,9 +48,30 @@ body {
 	position:relative;
 	background:#2f2669;
 	border:2px solid #20135a;
+	overflow:hidden;
 	-webkit-transition: background .2s linear;
 	transition: background .2s linear;
 }
+
+#subnav a span.text {
+	display:block;
+	-webkit-transition: margin-top .5s ease-in;
+	transition: margin-top .5s ease-in;
+}
+#subnav a:hover span.text {
+	margin-top:40px;
+}
+#subnav a span.logo {
+	display:block;
+	margin-top:-45px;
+	opacity:.75;
+	-webkit-transition: margin-top .5s ease-out;
+	transition: margin-top .5s ease-out;
+}
+#subnav a:hover span.logo {
+	margin-top:-4px;
+}
+
 
 #subnav a:hover {
 	background:#20135a;

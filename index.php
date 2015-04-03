@@ -18,11 +18,11 @@
     <div id="header"></div>
     <div id="subnav">
       <div id="links">
-        <a href="http://twitter.com/arcele" target="_twit">twit</a>
-        <a href="http://facebook.com/jryankelley" target="_face">book</a>
-        <a href="http://github.com/arcele" target="_git">git</a>
-        <a href="http://linkedin.com/in/jryankelley" target="_linked">link</a>
-        <a href="mailto:ryan@jryky.com">mail</a>
+        <a href="http://twitter.com/arcele" target="_twit"><span class="logo"><img src="img/social/twitter.png"></span><span class="text">twit</span></a>
+        <a href="http://facebook.com/jryankelley" target="_face"><span class="logo"><img src="img/social/facebook.png"></span><span class="text">book</span></a>
+        <a href="http://github.com/arcele" target="_git"><span class="logo"><img src="img/social/github.png"></span><span class="text">git</span></a>
+        <a href="http://linkedin.com/in/jryankelley" target="_linked"><span class="logo"><img src="img/social/linkedin.png" /></span><span class="text">link</span></a>
+        <a href="mailto:ryan@jryky.com"><span class="logo"><img src="img/social/email.png" /></span><span class="text">mail</span></a>
       </div>
     </div>
     <div id="content">
