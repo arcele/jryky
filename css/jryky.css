@@ -1,15 +1,12 @@
 
 body {
-	background-color:#212121;
 	font-family: "Gill Sans MT", Calibri, sans-serif;	
 }
 
 #header {
 	margin: -8px -8px 0 -8px;
 	z-index:3;
-	background:white; 
 	height:110px;
-	background-color: #212121;
 	position:fixed;
 	top:0;
 	width:100%;
@@ -17,7 +14,6 @@ body {
 }
 
 #subnav {
-	background:#212121;
 	position:fixed;
 	height:42px;
 	top:100px;
@@ -41,7 +37,6 @@ body {
 	text-align:center;
 	display:block;
 	position:relative;
-	background:#2f2669;
 	border:2px solid #20135a;
 	overflow:hidden;
 }
@@ -67,7 +62,7 @@ body {
 
 
 #subnav #links a:hover {
-	background-color:#20135a;
+	background-color:#20135a !important;
 	color:#f3f3f3;
 	-webkit-transition: all .75s ease-in;
 	transition: all .75s ease-in;
