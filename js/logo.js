@@ -2,13 +2,8 @@ var Logo;
 (function() {
 	var instance;
 
-	Logo = function Logo() {
-		if(instance) {
-			return instance;
-		}
-		instance = this;
-
-		this.config = {
+	Themes = {
+		'DeepPurple':  {
 			LOGO_COLOR: "#CFCFCF",
 			ZOOMED_LOGO_COLOR: "#EFEFFF",
 			LOGO_TEXT_FONT_SIZE: 30,
@@ -17,8 +12,17 @@ var Logo;
 			DOT_ANGULAR_SPEED_MULTIPLIER: 10,
 			DOT_ROTATION_SPEED: 360 / 150000,
 			DOT_PRIMARY_COLOR: "#2F2669",
-			DOT_SECONDARY_COLOR: "#BF4799"
-		};
+			DOT_SECONDARY_COLOR: "#BF4799"			
+		}
+	}
+
+	Logo = function Logo() {
+		if(instance) {
+			return instance;
+		}
+		instance = this;
+
+		this.config = Themes.DeepPurple;
 
 		this.stage = new Kinetic.Stage( { 
 			container: 'header',
