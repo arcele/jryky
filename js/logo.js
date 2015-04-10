@@ -1,4 +1,3 @@
-var Logo;
 (function() {
 	var instance;
 
@@ -7,9 +6,15 @@ var Logo;
 		// Class to control the theme being used for the js header and the css managed document
 		this.dom = dom;
 		this.theme = Themes['DeepPurple']; // Default Theme
+		this.elements = Elements;
 		this.logo = new Logo(this.theme);
 
+
 		this.dom.find('body').addClass(this.theme.NAME);
+		for(key in this.elements) {
+			var el = this.elements[key];
+			this.dom.find(key).css(el.property, this.theme[el.attribute]);
+		}
 
 	};
 
@@ -24,9 +29,36 @@ var Logo;
 			DOT_ANGULAR_SPEED_MULTIPLIER: 10,
 			DOT_ROTATION_SPEED: 360 / 150000,
 			DOT_PRIMARY_COLOR: "#2F2669",
-			DOT_SECONDARY_COLOR: "#BF4799"			
+			DOT_SECONDARY_COLOR: "#BF4799",
+			BACKGROUND_COLOR: '#212121'		
+		},
+		'MidnightGreen': {
+			NAME: 'MidnightGreen',
+			LOGO_COLOR: "#A5ACAF",
+			ZOOMED_LOGO_COLOR: "#565A5C",
+			LOGO_TEXT_FONT_SIZE: 30,
+			LOGO_TEXT_MAX_SIZE: 60,
+			LOGO_TEXT_OPACITY: .9,
+			DOT_ANGULAR_SPEED_MULTIPLIER: 10,
+			DOT_ROTATION_SPEED: 360 / 150000,
+			DOT_PRIMARY_COLOR: "#004953",
+			DOT_SECONDARY_COLOR: "#000000",
+			BACKGROUND_COLOR: '#FFFFFF'			
 		}
 	};
+
+	// element selectors, their properties, and their theme attribute to use
+	Elements = {
+		'body': {
+			'property' :'background-color',
+			'attribute':'BACKGROUND_COLOR'
+		},
+		'#subnav #links a' : {
+			'property' :'background-color',
+			'attribute': 'DOT_PRIMARY_COLOR'
+		}
+	}
+
 
 
 	Logo = function Logo(config) {
