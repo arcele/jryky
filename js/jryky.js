@@ -1,11 +1,6 @@
 $(document).ready(
 	function() {
-		logo = new Logo();
+		brand = new Brand($(document));
 	}
-	/*
-    function() {
-	$.getScript('js/logo.js');
-    }
-    */
 );
 

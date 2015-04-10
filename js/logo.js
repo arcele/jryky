@@ -2,8 +2,20 @@ var Logo;
 (function() {
 	var instance;
 
+
+	Brand = function Brand(dom) {
+		// Class to control the theme being used for the js header and the css managed document
+		this.dom = dom;
+		this.theme = Themes['DeepPurple']; // Default Theme
+		this.logo = new Logo(this.theme);
+
+		this.dom.find('body').addClass(this.theme.NAME);
+
+	};
+
 	Themes = {
 		'DeepPurple':  {
+			NAME: 'DeepPurple',
 			LOGO_COLOR: "#CFCFCF",
 			ZOOMED_LOGO_COLOR: "#EFEFFF",
 			LOGO_TEXT_FONT_SIZE: 30,
@@ -14,15 +26,16 @@ var Logo;
 			DOT_PRIMARY_COLOR: "#2F2669",
 			DOT_SECONDARY_COLOR: "#BF4799"			
 		}
-	}
+	};
 
-	Logo = function Logo() {
+
+	Logo = function Logo(config) {
 		if(instance) {
 			return instance;
 		}
 		instance = this;
 
-		this.config = Themes.DeepPurple;
+		this.config = config; //Themes.DeepPurple;
 
 		this.stage = new Kinetic.Stage( { 
 			container: 'header',
