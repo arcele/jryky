@@ -30,6 +30,8 @@
 			DOT_ROTATION_SPEED: 360 / 150000,
 			DOT_PRIMARY_COLOR: "#2F2669",
 			DOT_SECONDARY_COLOR: "#BF4799",
+			DOT_MINIMUM_OPACITY: .3,
+			DOT_MAXIMUM_OPACITY: .5,
 			BACKGROUND_COLOR: '#212121'		
 		},
 		'MidnightGreen': {
@@ -43,6 +45,8 @@
 			DOT_ROTATION_SPEED: 360 / 150000,
 			DOT_PRIMARY_COLOR: "#004953",
 			DOT_SECONDARY_COLOR: "#000000",
+			DOT_MINIMUM_OPACITY: .75,
+			DOT_MAXIMUM_OPACITY: .95,
 			BACKGROUND_COLOR: '#FFFFFF'			
 		}
 	};
@@ -94,7 +98,7 @@
 					radius: 10 + Math.random() * 6,
 					fill: Math.floor(Math.random() * 2) == 1 ? this.config.DOT_PRIMARY_COLOR : this.config.DOT_SECONDARY_COLOR,
 					strokeWidth: 0,
-					opacity: .3 + Math.random() / 5,
+					opacity: this.config.DOT_MINIMUM_OPACITY + Math.random() * (this.config.DOT_MAXIMUM_OPACITY - this.config.DOT_MINIMUM_OPACITY),
 					x: i * 50 + Math.random() * 15,
 					y: j * 50 + Math.random() * 15
 				} );
