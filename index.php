@@ -27,24 +27,11 @@
     </div>
     <div id="content">
       <section class="blurb">
-        <div class="profile_pic"></div>
-        <p>I'm Ryan.  I like to build stuff on the internet. I'm a front end engineer, currently based out of Seattle, originally from Delaware.  I've been doing this kind of stuff for fun since 1998 and professionally since 2003.</p>
-        <p>It turns out that building stuff on the internet is actually pretty easy.  There's tons of great communities that have done a lot of the heavy lifting for developers everywhere.  When it comes to DOM manipulation <a href="https://jquery.com/">jQuery is king</a> and has been since, like, 2009.  When I first started playing with canvas manipulation, I chose <a href="http://kineticjs.com/" target="_new">Kinetic</a>.  Sadly, it's no longer maintained (although the final version is pretty solid) and all of the public docs got taken down.  It's still a pretty great chunk of code, the header for this site was written using it.  If you've got a recommendation for a well written canvas library, <a href="mailto:ryan@jryky.com">hit me up</a>.</p>
-        <p>There's also a ton of tools out there to make using web technologies easier to use.  Need to make a css gradient? <a href="http://www.colorzilla.com/gradient-editor/" target="_new">Colorzilla has got you covered</a>.  Overwhelmed by what prefixes to include for rounded corners, drop shadows, or animations? <a href="http://pleeease.io/play">pleeease did the work</a> so that you don't have to.  When it comes to just helpful interesting posts about css, I don't think that it gets much better than <a href="http://css-tricks.com">css-tricks.</a></p>
-       </section>      
+        <!-- -->
+      <section class="blurb">
 
       <section class="blurb">
-	<p>Here's some stuff that I'm building now to play with technologies and keep sharp.</p>
-	<ul>
-	  <li><a href="http://www.cochl.com" target="_cochl"><img src="img/bass.jpg" />Tab Entry</a>.  Direct canvas manipulation using <a href="http://jquery.com/" target="_out">jQuery</a> to allow users to enter Guitar/Bass tabs.  Click on the strings to add notes, keep clicking the same note to increment the fret.  If you don't know anything about Tablature, <a href="http://en.wikipedia.org/wiki/Tablature" target="_out">learn more here</a>.</li>
-	  <li><a href="http://www.nwbhf.com" target="nwbhf"><img src="img/bubblehockey.jpg" />Bubble Hockey.</a> Bubble hockey game using <a href="http://kineticjs.com/" target="_out">KineticJS</a> to interact with the canvas object.</li> 
-	  <li><img src="img/logobuilder.PNG" /><a href="http://www.retirethe5.com" target="_retire5">Logo Displayer</a>. Displays an HTML5 team logo that can be used cross-platform to brand your team across all of your devices.  Written using <a href="http://kineticjs.com/" target="_out">KineticJS</a>.  Load it up and it will give you a random team logo, refresh for a new one, <a href="http://www.retirethe5.com/?&backStyle=habs&backColor=000088&foreColor=3333FF&logoLetter=W|V&fontColor=CFB53B&fontFamily=Calibri" target="_retire5">or, it will create logos with passed in parameters.</a></li>
-	  <li><img src="img/grady.png" /><a href="http://www.wieddoggs.com" target="_dogs">Wieddoggs.com</a>, a website about my family's dogs that I put together for my Mom for her birthday.  It's all custom built with css animations and a very basic photo gallery.</li>
-  </ul>
-      </section>
-
-      <section class="blurb">
-	<p>If you want to know more, or you just want to go grab a beer with me to catch a birds game, <a href="mailto:ryan@jryky.com">shoot me an e-mail</a>
+        <!-- -->
       </section>
 	</div>
 
