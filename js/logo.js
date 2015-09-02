@@ -87,7 +87,7 @@
 		this.stage = new Kinetic.Stage( { 
 			container: 'header',
 			width: window.innerWidth,
-			height: 400//110
+			height: 400
 		} );
 		this.layer = new Kinetic.Layer();
 
@@ -135,21 +135,6 @@
 				opacity:.85
 			});
 			this.layer.add(this.title);
-
-			this.title.on( 'mouseover click', '.title',function() {
-				console.log("oh.");
-				/*this.angularSpeed /= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
-				this.compressTitleFont.stop();
-				this.expandTitleFont.start();
-				this.title.fill(this.config.ZOOMED_LOGO_COLOR);*/
-			}.bind(this));
-			this.title.on( 'mouseout', function() {
-				console.log("yeah.");
-				/*this.angularSpeed *= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
-				this.expandTitleFont.stop();
-				this.compressTitleFont.start();
-				this.title.fill(this.config.LOGO_COLOR);*/
-			}.bind(this));
 
 		}.bind(this);
 		imageObj.src = 'img/logo/jryky-' + this.config.NAME + '.png'
