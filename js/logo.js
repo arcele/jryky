@@ -5,7 +5,7 @@
 	Brand = function Brand(dom) {
 		// Class to control the theme being used for the js header and the css managed document
 		this.dom = dom;
-		this.theme = Themes['DeepPurple']; // Default Theme
+		this.theme = Themes['Default']; // Default Theme
 		this.elements = Elements;
 		this.logo = new Logo(this.theme);
 
@@ -26,7 +26,7 @@
 			LOGO_TEXT_FONT_SIZE: 30,
 			LOGO_TEXT_MAX_SIZE: 60,
 			LOGO_TEXT_OPACITY: .8,
-			DOT_ANGULAR_SPEED_MULTIPLIER: 10,
+			DOT_ANGULAR_SPEED_MULTIPLIER: 100,
 			DOT_ROTATION_SPEED: 360 / 150000,
 			DOT_PRIMARY_COLOR: "#2F2669",
 			DOT_SECONDARY_COLOR: "#BF4799",
@@ -48,6 +48,17 @@
 			DOT_MINIMUM_OPACITY: .75,
 			DOT_MAXIMUM_OPACITY: .95,
 			BACKGROUND_COLOR: '#FFFFFF'			
+		},
+		'Default' : {
+			NAME: 'Default',
+			LOGO_TEXT_OPACITY: 1,
+			DOT_ANGULAR_SPEED_MULTIPLER: 100,
+			DOT_ROTATION_SPEED: 360 / 150000,
+			DOT_PRIMARY_COLOR: '#005893',
+			DOT_SECONDARY_COLOR: '#cac1bf',
+			DOT_MINIMUM_OPACITY: .5,
+			DOT_MAXIMUM_OPACITY: .9,
+			BACKGROUND_COLOR: '#FFFFFF'
 		}
 	};
 
@@ -71,12 +82,12 @@
 		}
 		instance = this;
 
-		this.config = config; //Themes.DeepPurple;
+		this.config = config;
 
 		this.stage = new Kinetic.Stage( { 
 			container: 'header',
 			width: window.innerWidth,
-			height: 110
+			height: 400//110
 		} );
 		this.layer = new Kinetic.Layer();
 
@@ -114,16 +125,35 @@
 		this.dotGroupA.draw();
 		this.dotGroupB.draw();
 
-		this.title = new Kinetic.Text( {
-			x: this.stage.getWidth() / 2 - 85,
-			y: 30,
-			text: 'j. ryan kelley',
-			fontSize: this.config.LOGO_TEXT_FONT_SIZE,
-			fontFamily: 'Calibri',
-			fill: this.config.LOGO_COLOR,
-			opacity: this.config.LOGO_TEXT_OPACITY
-		} );
-		this.layer.add(this.title);
+		var imageObj = new Image();
+		
+		imageObj.onload = function() {
+			this.title = new Kinetic.Image( {
+				x: this.stage.getWidth() /2 - 250,
+				y: 30,
+				image: imageObj,
+				opacity:.85
+			});
+			this.layer.add(this.title);
+
+			this.title.on( 'mouseover click', '.title',function() {
+				console.log("oh.");
+				/*this.angularSpeed /= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
+				this.compressTitleFont.stop();
+				this.expandTitleFont.start();
+				this.title.fill(this.config.ZOOMED_LOGO_COLOR);*/
+			}.bind(this));
+			this.title.on( 'mouseout', function() {
+				console.log("yeah.");
+				/*this.angularSpeed *= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
+				this.expandTitleFont.stop();
+				this.compressTitleFont.start();
+				this.title.fill(this.config.LOGO_COLOR);*/
+			}.bind(this));
+
+		}.bind(this);
+		imageObj.src = 'img/logo/jryky-' + this.config.NAME + '.png'
+
 		
 		// ANIMATIONS
 		this.angularSpeed = this.config.DOT_ROTATION_SPEED;
@@ -157,19 +187,6 @@
 			}.bind(this)
 		);
 
-		// EVENTS
-		this.title.on( 'mouseover click', function() {
-			this.angularSpeed /= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
-			this.compressTitleFont.stop();
-			this.expandTitleFont.start();
-			this.title.fill(this.config.ZOOMED_LOGO_COLOR);
-		}.bind(this));
-		this.title.on( 'mouseout', function() {
-			this.angularSpeed *= this.config.DOT_ANGULAR_SPEED_MULTIPLIER;
-			this.expandTitleFont.stop();
-			this.compressTitleFont.start();
-			this.title.fill(this.config.LOGO_COLOR);
-		}.bind(this));
 	};
 
 })();

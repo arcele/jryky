@@ -6,7 +6,7 @@ body {
 #header {
 	margin: -8px -8px 0 -8px;
 	z-index:3;
-	height:110px;
+	height:235px;
 	position:fixed;
 	top:0;
 	width:100%;
@@ -14,9 +14,8 @@ body {
 }
 
 #subnav {
-	position:fixed;
 	height:42px;
-	top:100px;
+	margin-top:235px; /* #header height */
 	width:100%;
 	z-index:2;
 }
