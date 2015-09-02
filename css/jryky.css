@@ -38,6 +38,8 @@ body {
 	position:relative;
 	border:2px solid #20135a;
 	overflow:hidden;
+	-webkit-transition: background-color .25s ease-in;
+	transition: background-color .25s ease-in;
 }
 
 #subnav a span.text {
