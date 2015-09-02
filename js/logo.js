@@ -132,7 +132,7 @@
 				x: this.stage.getWidth() /2 - 250,
 				y: 30,
 				image: imageObj,
-				opacity:.85
+				opacity:this.config.LOGO_TEXT_OPACITY
 			});
 			this.layer.add(this.title);
 
