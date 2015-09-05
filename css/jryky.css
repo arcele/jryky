@@ -36,7 +36,7 @@ body {
 	text-align:center;
 	display:block;
 	position:relative;
-	border:2px solid #20135a;
+	border:2px solid #bab1af;
 	overflow:hidden;
 	-webkit-transition: background-color .25s ease-in;
 	transition: background-color .25s ease-in;
@@ -63,7 +63,7 @@ body {
 
 
 #subnav #links a:hover {
-	background-color:#20135a !important;
+	background-color:#002855 !important;
 	color:#f3f3f3;
 	-webkit-transition: all .75s ease-in;
 	transition: all .75s ease-in;
@@ -76,7 +76,7 @@ body {
 	left:-5px;
 	height:16px;
 	width:12px;
-	background: #20135a;
+	background: #cac1bf;
 	transform:skew(26deg);
 }
 #subnav a:after {
@@ -86,7 +86,7 @@ body {
 	left:-5px;
 	height:16px;
 	width:12px;
-	background: #20135a;
+	background: #bab1af;
 	transform:skew(-26deg);
 }
 
@@ -106,13 +106,14 @@ body {
 	z-index:2;
 }
 a {
-	color:#BF4799;
+	color:#005893;
 }
 a:visited {
-	color:#7F76A9;
+	color:#002855;
 }
 a:hover {
 	text-decoration:none;
+	color:#002855;
 }
 
 #content .blurb {
@@ -160,7 +161,7 @@ a:hover {
 #footer {
 	width:100%;
 	text-align:center;
-	color: #999;
+	color: #cac1bf;
 	font-family:Calibri;
 	font-size:12px;
 	margin:9px 0px;
