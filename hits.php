@@ -5,7 +5,16 @@ if(!$connection) {
   die("Can't connect to db. ". mysql_error());
 }
 mysql_select_db('jryankel_jryky');
-$query = mysql_query("SELECT * FROM hits ORDER BY id desc limit 0,25;");
+
+$countQuery = mysql_query("SELECT count(*) as total from hits");
+$count = mysql_fetch_array($countQuery);  // $count['total'] holds total number of hits.
+
+$firstResult = 0;
+$resultsPerPage = 25;
+if(isset($_GET['f'])) {
+	$firstResult = $_GET['f'];	
+}
+$query = mysql_query("SELECT * FROM hits ORDER BY id desc limit " . $firstResult . ", " . $resultsPerPage . ";");
 
 echo '<table border="1" cellpadding="1">';
 echo '<tr><th>id</th><th>ip</th><th>host</th><th>referer</th><th>when</th></tr>';
@@ -16,4 +25,12 @@ while($row = mysql_fetch_assoc($query)) {
 }
 mysql_close($connection);
 echo '</table>';
+
+if($firstResult + $resultsPerPage < $count['total']) {
+	echo '<a href="?f='. ($firstResult + $resultsPerPage) .'">&laquo; older</a>';
+	echo '&nbsp;&nbsp;&nbsp;';
+}
+if($firstResult > 0) {
+	echo '<a href="?f='. max($firstResult-25, 0).'">newer &raquo;</a>';
+}
 ?>
