@@ -18,8 +18,8 @@ if(isset($_GET['f'])) {
 $queryString = "SELECT * FROM hits";
 if(isset($_GET['r'])) {
 	// Select results only for specified referer
-	$queryString .= " WHERE referer = '". urldecode($_GET['r']) ."'";
-	$countQueryString .= " WHERE referer = '". urldecode($_GET['r']) ."'";
+	$queryString .= " WHERE referer = '". $_GET['r'] ."'";
+	$countQueryString .= " WHERE referer = '". $_GET['r'] ."'";
 	echo '<p>Showing results for referer: <a href="' . $_GET['r'] . '">' . $_GET['r'] . '</a></p>';
 	echo '<p><a href="hits.php">Show All Results</a></p>';
 	$additionalParams = "&r=" . urlencode($_GET['r']);
@@ -28,7 +28,7 @@ else if(isset($_GET['ip'])) {
 	// Select results only for specified ip address
 	$queryString .= " WHERE ip = '". $_GET['ip'] ."'";
 	$countQueryString .= " WHERE ip = '". $_GET['ip'] ."'";
-	echo '<p>Showing results for ip: '. urldecode($_GET['ip']) .".</p>";
+	echo '<p>Showing results for ip: '. $_GET['ip'] .".</p>";
 	echo '<p><a href="hits.php">Show All Results</a></p>';
 	$additionalParams = "&ip=" . urlencode($_GET['ip']);
 }
