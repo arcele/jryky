@@ -24,8 +24,17 @@ if(isset($_GET['r'])) {
 	echo '<p><a href="hits.php">Show All Results</a></p>';
 	$additionalParams = "&r=" . urlencode($_GET['r']);
 }
+else if(isset($_GET['ip'])) {
+	// Select results only for specified ip address
+	$queryString .= " WHERE ip = '". $_GET['ip'] ."'";
+	$countQueryString .= " WHERE ip = '". $_GET['ip'] ."'";
+	echo '<p>Showing results for ip: '. urldecode($_GET['ip']) .".</p>";
+	echo '<p><a href="hits.php">Show All Results</a></p>';
+	$additionalParams = "&ip=" . urlencode($_GET['ip']);
+}
+
 $queryString .= " ORDER BY id desc limit " . $firstResult . ", " . $resultsPerPage;
-$query = mysql_query($queryString . ";");
+$query = mysql_query($queryString);
 $countQuery = mysql_query($countQueryString);
 $count = mysql_fetch_array($countQuery);  // $count['total'] holds total number of hits.
 
@@ -35,7 +44,7 @@ echo '<tr><th>id</th><th>ip</th><th>host</th><th>referer</th><th>when</th></tr>'
 while($row = mysql_fetch_assoc($query)) {
   $host = gethostbyaddr($row['ip']);
   echo '<tr><td>'. $row['id'] .'</td>';
-  echo '<td>'. $row['ip'] .'</td>';
+  echo '<td><a href="?ip='. urlencode($row['ip']).'">'. $row['ip'] .'</a></td>';
   echo '<td>' . $host . '</td>';
   echo '<td>';
   if($row['referer'] != '') {
