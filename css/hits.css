@@ -1,0 +1,6 @@
+table { border:1px solid black; border-collapse:collapse; }
+table tr { color:#090501; }
+table tr th { background:#A5CD98; }
+table tr td { padding: 3px 8px; }
+table tr { background:#E3F7A3; }
+table tr:nth-child(odd) { background: #D8E8A5; }
