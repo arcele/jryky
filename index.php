@@ -24,6 +24,7 @@
         <a href="http://github.com/arcele" target="_git"><span class="logo"><img src="img/social/github.png"></span><span class="text">github</span></a>
         <a href="http://linkedin.com/in/jryankelley" target="_linked"><span class="logo"><img src="img/social/linkedin.png" /></span><span class="text">linkedin</span></a>
         <a href="mailto:ryan@jryky.com"><span class="logo"><img src="img/social/email.png" /></span><span class="text">email</span></a>
+        <div style="clear:both;"></div>
       </div>
     </div>
     <div id="content">
