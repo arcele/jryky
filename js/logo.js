@@ -86,7 +86,7 @@
 
 		this.stage = new Kinetic.Stage( { 
 			container: 'header',
-			width: window.innerWidth,
+			width: 1150, //window.innerWidth,
 			height: 400
 		} );
 		this.layer = new Kinetic.Layer();
