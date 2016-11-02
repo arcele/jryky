@@ -20,6 +20,7 @@
       <div id="links">
         <a href="http://twitter.com/arcele" target="_twit"><span class="logo"><img src="img/social/twitter.png"></span><span class="text">twitter</span></a>
         <a href="http://facebook.com/jryankelley" target="_face"><span class="logo"><img src="img/social/facebook.png"></span><span class="text">facebook</span></a>
+        <a href="http://instagram.com/jryankelley" target="_gram"><span class="logo"><img src="img/social/instagram.png"></span><span class="text">instagram</span></a>
         <a href="http://github.com/arcele" target="_git"><span class="logo"><img src="img/social/github.png"></span><span class="text">github</span></a>
         <a href="http://linkedin.com/in/jryankelley" target="_linked"><span class="logo"><img src="img/social/linkedin.png" /></span><span class="text">linkedin</span></a>
         <a href="mailto:ryan@jryky.com"><span class="logo"><img src="img/social/email.png" /></span><span class="text">email</span></a>

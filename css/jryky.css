@@ -5,7 +5,7 @@ body {
 
 #header {
 	margin: -8px auto 0 auto;
-	z-index:3;
+	z-index:1;
 	height:235px;
 	position:relative;
 	top:0;
@@ -30,7 +30,7 @@ body {
 	width:100px;
 	height:28px;
 	line-height:30px;
-	margin:6px 20px;
+	margin:6px 8px;
 	text-decoration:none;
 	color:#e8e8e8;
 	text-align:center;
@@ -40,6 +40,7 @@ body {
 	overflow:hidden;
 	-webkit-transition: background-color .25s ease-in;
 	transition: background-color .25s ease-in;
+	z-index:3;
 }
 
 #subnav a span.text {
