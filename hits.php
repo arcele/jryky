@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+ <head>
+  <title>These are your hits, dog</title>
+  <link rel="stylesheet" href="css/hits.css" />
+ </head>
+ <body>
+
 <?php
 include_once('config/database.php');  // Config file contains $database declaraion
 $connection = mysql_connect($database['server'], $database['login'], $database['password']);
@@ -39,7 +46,7 @@ $countQuery = mysql_query($countQueryString);
 $count = mysql_fetch_array($countQuery);  // $count['total'] holds total number of hits.
 
 
-echo '<table border="1" cellpadding="1">';
+echo '<table>';
 echo '<tr><th>id</th><th>ip</th><th>host</th><th>referer</th><th>when</th></tr>';
 while($row = mysql_fetch_assoc($query)) {
   $host = gethostbyaddr($row['ip']);
@@ -65,3 +72,6 @@ if($firstResult > 0) {
 	echo '<a href="?f='. max($firstResult-25, 0). $additionalParams .'">newer &raquo;</a>';
 }
 ?>
+
+ </body>
+</html>
