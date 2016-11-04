@@ -1,3 +1,5 @@
+body { font-family: "Gill Sans MT", Calibri, sans-serif; }
+
 table { border:1px solid black; border-collapse:collapse; }
 
 table tr { background: #cac1bf; }
