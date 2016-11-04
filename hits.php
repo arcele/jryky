@@ -48,8 +48,21 @@ $count = mysql_fetch_array($countQuery);  // $count['total'] holds total number 
 
 echo '<table>';
 echo '<tr><th>id</th><th>ip</th><th>host</th><th>referer</th><th>when</th></tr>';
+$updateHosts = false;
+$updateHostString = "INSERT into hits(id, host) VALUES ";
+
 while($row = mysql_fetch_assoc($query)) {
-  $host = gethostbyaddr($row['ip']);
+  $host = $row['host'];
+  if(is_null($row['host'])) {
+    $updateHosts = true;
+    // attempt to resolve the host and save it to the db
+    $host = gethostbyaddr($row['ip']);
+    if(is_null($host)) {
+      $host = "--";
+    }
+    $updateHostString .= " (". $row['id'] .",'". gethostbyaddr($row['ip']) . "'),";
+   
+  }
   echo '<tr><td>'. $row['id'] .'</td>';
   echo '<td><a href="?ip='. urlencode($row['ip']).'">'. $row['ip'] .'</a></td>';
   echo '<td>' . $host . '</td>';
@@ -61,9 +74,14 @@ while($row = mysql_fetch_assoc($query)) {
   }
   echo '<td>'. $row['ts_created'] .'</td></tr>';
 }
+if($updateHosts) {
+  $updateHostString = rtrim($updateHostString, ","); // remove trailing comma
+  $updateHostString .= " ON DUPLICATE KEY UPDATE host=VALUES(host)";
+  mysql_query($updateHostString);
+}
 mysql_close($connection);
 echo '</table>';
-
+echo $updateHostString;
 if($firstResult + $resultsPerPage < $count['total']) {
 	echo '<a href="?f='. ($firstResult + $resultsPerPage) . $additionalParams .'">&laquo; older</a>';
 	echo '&nbsp;&nbsp;&nbsp;';
