@@ -11,7 +11,7 @@ $connection = mysql_connect($database['server'], $database['login'], $database['
 if(!$connection) {
   die("Can't connect to db. ". mysql_error());
 }
-mysql_select_db('jryankel_jryky');
+mysql_select_db($database['db']);
 
 $countQueryString = "SELECT count(*) as total from hits";
 
