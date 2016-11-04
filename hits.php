@@ -68,7 +68,7 @@ while($row = mysql_fetch_assoc($query)) {
   echo '<td>' . $host . '</td>';
   echo '<td>';
   if($row['referer'] != '') {
-  	echo '<a href="?r=' . urlencode($row['referer']) . '">' . $row['referer'] . '</a>';
+    echo '<a href="?r=' . urlencode($row['referer']) . '">' . substr($row['referer'], 0, 64) . (strlen($row['referer']) > 64 ? '...' : '') .'</a>';
   } else {
   	'-';
   }
@@ -81,7 +81,7 @@ if($updateHosts) {
 }
 mysql_close($connection);
 echo '</table>';
-echo $updateHostString;
+
 if($firstResult + $resultsPerPage < $count['total']) {
 	echo '<a href="?f='. ($firstResult + $resultsPerPage) . $additionalParams .'">&laquo; older</a>';
 	echo '&nbsp;&nbsp;&nbsp;';
