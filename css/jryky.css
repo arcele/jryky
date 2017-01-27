@@ -1,6 +1,6 @@
 
 body {
-	font-family: "Gill Sans MT", Calibri, sans-serif;	
+	font-family: "Gill Sans MT", Calibri, sans-serif;		
 }
 
 #header {
@@ -11,8 +11,6 @@ body {
 	top:0;
 	max-width:1150px;
 }
-
-
 
 #subnav {
 	height:42px;
@@ -99,12 +97,12 @@ body {
 }
 
 #content {
+	font-family: "Droid Sans";
 	font-size:11pt;
-	width:780px;
-	margin:auto;
-	margin-top:150px;
-	color:#999;
+	width:100%;
+	color:#666;
 	z-index:2;
+	background:white;
 }
 a {
 	color:#005893;
@@ -118,8 +116,9 @@ a:hover {
 }
 
 #content .blurb {
-	line-height:20px;
-	margin:0 20px;
+	line-height:22px;
+	width:780px;
+	margin:20px auto;
 }
 
 #content .topic {
@@ -150,7 +149,8 @@ a:hover {
 	float:left; 
 	width:73px;
 	height:73px;
-	background:url(../img/jryky.jpg);
+	background:url(../img/jryky.png);
+	background-size:73px 73px;
 	border-radius: 50%;
 	overflow:hidden;
 	margin: 0 15px 0 0;
