@@ -103,6 +103,8 @@ body {
 	color:#666;
 	z-index:2;
 	background:white;
+	min-height:400px;
+	margin-top:35px;
 }
 a {
 	color:#005893;
@@ -149,7 +151,7 @@ a:hover {
 	float:left;
 	width:73px;
 	height:73px;
-	background:url(../img/jryky.png);
+	background:url(../img/jryky.jpg);
 	background-size:73px 73px;
 	border-radius: 50%;
 	overflow:hidden;
@@ -157,6 +159,7 @@ a:hover {
 	border:1px solid #333;
 	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.25);
+	transform: scaleX(-1);
 }
 
 #footer {
