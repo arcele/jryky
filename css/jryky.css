@@ -1,6 +1,6 @@
 
 body {
-	font-family: "Gill Sans MT", Calibri, sans-serif;		
+	font-family: "Gill Sans MT", Calibri, sans-serif;
 }
 
 #header {
@@ -20,7 +20,7 @@ body {
 
 #subnav #links {
 	margin:auto;
-	width:720px;
+	width:520px;
 }
 
 #subnav #links a {
@@ -139,14 +139,14 @@ a:hover {
 	float:left;
 	width:50px;
 	margin: 0 8px;
-	border-radius:50%; 
+	border-radius:50%;
 	border:1px solid black;
 	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.25);
 }
 
 .profile_pic {
-	float:left; 
+	float:left;
 	width:73px;
 	height:73px;
 	background:url(../img/jryky.png);
@@ -154,7 +154,7 @@ a:hover {
 	border-radius: 50%;
 	overflow:hidden;
 	margin: 0 15px 0 0;
-	border:1px solid #333;	     
+	border:1px solid #333;
 	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.25);
 }
@@ -190,7 +190,7 @@ a:hover {
 }
 @-webkit-keyframes navDrop {
 	0% { top: 80px; }
-	100% { top: 165px; } 
+	100% { top: 165px; }
 }
 
 @keyframes fadeIn {
