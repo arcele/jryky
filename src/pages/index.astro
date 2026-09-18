@@ -6,6 +6,22 @@ const links = [
   { label: 'LinkedIn', href: 'https://linkedin.com/in/jryankelley', icon: 'linkedin' },
   { label: 'Email', href: 'mailto:ryan@jryky.com', icon: 'email' },
 ] as const;
+
+const siteUrl = 'https://jryky.com/';
+const title = 'J. Ryan Kelley — Software Engineer';
+const description =
+  'The personal homepage of J. Ryan Kelley — software engineer, internet tinkerer, and dog enthusiast.';
+const profileImage = new URL('/assets/ryan.jpg', siteUrl).toString();
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'J. Ryan Kelley',
+  alternateName: 'jryky',
+  url: siteUrl,
+  image: profileImage,
+  jobTitle: 'Software Engineer',
+  sameAs: ['https://github.com/arcele', 'https://www.linkedin.com/in/jryankelley'],
+};
 ---
 
 <!doctype html>
@@ -15,12 +31,31 @@ const links = [
     <meta name="viewport" content="width=device-width" />
     <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#07131d" media="(prefers-color-scheme: dark)" />
-    <meta
-      name="description"
-      content="The personal homepage of J. Ryan Kelley — software engineer, internet tinkerer, and dog enthusiast."
-    />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>J. Ryan Kelley — Software Engineer</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="J. Ryan Kelley" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={siteUrl} />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="jryky" />
+    <meta property="og:image" content={profileImage} />
+    <meta property="og:image:width" content="460" />
+    <meta property="og:image:height" content="460" />
+    <meta property="og:image:alt" content="Portrait of J. Ryan Kelley" />
+    <meta property="profile:first_name" content="Ryan" />
+    <meta property="profile:last_name" content="Kelley" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={profileImage} />
+    <meta name="twitter:image:alt" content="Portrait of J. Ryan Kelley" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <title>{title}</title>
   </head>
   <body>
     <a class="skip-link" href="#about">Skip to introduction</a>
@@ -46,7 +81,7 @@ const links = [
               href={link.href}
               class="social-link"
               target={link.href.startsWith('http') ? '_blank' : undefined}
-              rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+              rel={link.href.startsWith('http') ? 'me noreferrer' : undefined}
             >
               <span class="social-icon" aria-hidden="true">
                 {link.icon === 'github' && (
