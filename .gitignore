@@ -1,1 +1,20 @@
-config/database.php
+# Dependencies
+node_modules/
+
+# Astro build files
+dist/
+.astro/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
