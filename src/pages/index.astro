@@ -7,6 +7,41 @@ const links = [
   { label: 'Email', href: 'mailto:ryan@jryky.com', icon: 'email' },
 ] as const;
 
+const projects = [
+  {
+    name: 'Free Jumbo Jack',
+    url: 'https://freejumbojack.com',
+    domain: 'freejumbojack.com',
+    image: '/assets/projects/free-jumbo-jack.svg',
+    description:
+      'The Padres give out free cheeseburgers whenever they hit a homer the previous night.  This is a one stop shop to see if San Diegans can get that free burger.  It also serves some other markets like Los Angeles and Arizona, and even some football teams who have similar giveaways.',
+  },
+  {
+    name: 'When We Match',
+    url: 'https://whenwematch.com',
+    domain: 'whenwematch.com',
+    image: '/assets/projects/when-we-match.svg',
+    description:
+      'You ever wonder when your human years exactly match how old your dog is in dog years?  Yeah, don\'t worry, neither have most other sane people, but I did.  And I made a site for you to plug in your date of birth and your dog\'s date of birth to find that exact time.',
+  },
+  {
+    name: 'Numbereeno',
+    url: 'https://numbereeno.com',
+    domain: 'numbereeno.com',
+    image: '/assets/projects/numbereeno.svg',
+    description:
+      'Way back in the day, this was just a sketch on SquareONE television.  I thought it was neat then, and many years later I turned it into a website.  It\'s easy to pick up on, so check it out.',
+  },
+  {
+    name: 'Cochl',
+    url: 'https://cochl.com',
+    domain: 'cochl.com',
+    image: '/assets/projects/cochl.svg',
+    description:
+      'A scrappy top-down racing game with rival cars, damage, lap timing, and a healthy respect for walls.',
+  },
+] as const;
+
 const siteUrl = 'https://jryky.com/';
 const title = 'J. Ryan Kelley — Software Engineer';
 const description =
@@ -118,6 +153,35 @@ const structuredData = {
               sometimes because I wanted to.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section class="projects" id="projects" aria-labelledby="projects-title">
+        <div class="projects-inner">
+          <p class="section-label">Made for the internet</p>
+          <h2 id="projects-title">A few things I’ve built.</h2>
+
+          <ul class="project-list">
+            {projects.map((project) => (
+              <li>
+                <a class="project-card" href={project.url} target="_blank" rel="noreferrer">
+                  <span class="project-image" aria-hidden="true">
+                    <img src={project.image} alt="" width="160" height="160" loading="lazy" />
+                  </span>
+                  <span class="project-copy">
+                    <span class="project-name">{project.name}</span>
+                    <span class="project-description">{project.description}</span>
+                    <span class="project-domain">
+                      {project.domain}
+                      <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M5 3h8v8M13 3 4 12" />
+                      </svg>
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </main>

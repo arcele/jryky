@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <defs>
+    <linearGradient id="bg" x1="22" y1="16" x2="138" y2="145" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff4bd1"/>
+      <stop offset="1" stop-color="#8a176f"/>
+    </linearGradient>
+  </defs>
+  <circle cx="80" cy="80" r="80" fill="url(#bg)"/>
+  <path d="M31 118c26-5 38-17 36-35-2-16 7-29 29-38 12-5 22-8 33-9" fill="none" stroke="#262531" stroke-linecap="round" stroke-width="34"/>
+  <path d="M31 118c26-5 38-17 36-35-2-16 7-29 29-38 12-5 22-8 33-9" fill="none" stroke="#f7e96f" stroke-dasharray="7 9" stroke-linecap="round" stroke-width="3"/>
+  <g transform="translate(74 61) rotate(-30)">
+    <rect x="-11" y="-19" width="22" height="38" rx="7" fill="#39c6ff"/>
+    <rect x="-8" y="-10" width="16" height="15" rx="3" fill="#d8f6ff"/>
+    <rect x="-13" y="-12" width="4" height="9" rx="2" fill="#12131a"/>
+    <rect x="9" y="-12" width="4" height="9" rx="2" fill="#12131a"/>
+    <rect x="-13" y="8" width="4" height="9" rx="2" fill="#12131a"/>
+    <rect x="9" y="8" width="4" height="9" rx="2" fill="#12131a"/>
+  </g>
+  <path d="M111 99h18M106 109h16M100 119h14" stroke="#fff" stroke-linecap="round" stroke-width="4"/>
+</svg>
