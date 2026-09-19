@@ -591,12 +591,17 @@ footer p {
   }
 
   .intro-card {
-    display: block;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: 1rem;
   }
 
   .portrait-wrap {
-    width: 5.5rem;
-    margin-bottom: 2rem;
+    width: 5rem;
+    margin: 0.35rem 0 0;
+  }
+
+  .intro-copy h2 {
+    font-size: clamp(1.8rem, 9vw, 2.75rem);
   }
 
   .project-card {
