@@ -19,10 +19,10 @@ Page colors live as semantic custom properties in `src/styles/global.css` and fo
 system light/dark mode. Explicit `data-theme="light"` and `data-theme="dark"` hooks
 remain available independently of the bubble palette.
 
-Bubble palettes live in `src/scripts/palettes.ts`. Add an ID, label, and two hex
-colors for each of light and dark mode; the selector builds its options from that
-registry. `palette-selector.ts` saves the visitor's choice when browser storage is
-available and sets `data-palette` on the root element. Automatic currently uses
+Bubble palettes live in `src/scripts/palettes.ts`. Add an ID, label, and three hex
+colors for each of light and dark mode; the unlabeled slider builds its discrete stops from that
+registry. Repeat a color in the third slot for two-color themes. It has one stop per palette and exposes the theme name to screen readers. `palette-selector.ts` saves the visitor's choice when browser storage is
+available and sets `data-palette` on the root element. Without an explicit choice, the default is currently
 Ocean; `defaultPalette()` is the place to add future seasonal/date rules without
 overriding explicit visitor choices.
 

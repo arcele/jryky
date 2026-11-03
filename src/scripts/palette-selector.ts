@@ -1,22 +1,31 @@
-import { defaultPalette, isPalette } from './palettes';
+import { defaultPalette, isPalette, palettes } from './palettes';
 
-const selector = document.querySelector<HTMLSelectElement>('#bubble-palette');
-if (selector) {
+const slider = document.querySelector<HTMLInputElement>('#bubble-palette');
+if (slider) {
   const storageKey = 'jryky.bubble-palette';
   let preference = 'auto';
   try {
     const stored = localStorage.getItem(storageKey);
     if (stored === 'auto' || isPalette(stored)) preference = stored;
-  } catch { /* The selector also works when storage is unavailable. */ }
+  } catch { /* The slider also works when storage is unavailable. */ }
 
-  function apply(value: string) {
-    document.documentElement.dataset.palette = isPalette(value) ? value : defaultPalette();
+  const initialId = isPalette(preference) ? preference : defaultPalette();
+  slider.max = String(palettes.length - 1);
+  slider.value = String(palettes.findIndex((palette) => palette.id === initialId));
+
+  function apply() {
+    const palette = palettes[Number(slider!.value)];
+    if (!palette) return;
+    document.documentElement.dataset.palette = palette.id;
+    slider!.setAttribute('aria-valuetext', palette.label);
+    return palette.id;
   }
-  selector.value = preference;
-  apply(preference);
-  selector.closest<HTMLElement>('.palette-control')!.hidden = false;
-  selector.addEventListener('change', () => {
-    apply(selector.value);
-    try { localStorage.setItem(storageKey, selector.value); } catch { /* Optional persistence. */ }
+  apply();
+  slider.closest<HTMLElement>('.palette-control')!.hidden = false;
+  slider.addEventListener('input', () => {
+    const id = apply();
+    if (id) {
+      try { localStorage.setItem(storageKey, id); } catch { /* Optional persistence. */ }
+    }
   });
 }

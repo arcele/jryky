@@ -144,13 +144,21 @@ const structuredData = {
           ))}
         </nav>
 
-        <label class="palette-control" hidden>
-          <span>Bubble colors</span>
-          <select id="bubble-palette">
-            <option value="auto">Automatic</option>
-            {palettes.map((palette) => <option value={palette.id}>{palette.label}</option>)}
-          </select>
-        </label>
+        <div class="palette-control" hidden>
+          <div class="palette-stops" aria-hidden="true">
+            {palettes.map(() => <span></span>)}
+          </div>
+          <input
+            id="bubble-palette"
+            type="range"
+            min="0"
+            max={palettes.length - 1}
+            step="1"
+            value="0"
+            aria-label="Bubble color theme"
+            aria-valuetext={palettes[0].label}
+          />
+        </div>
 
         <div class="scroll-cue" aria-hidden="true"><span></span></div>
       </header>

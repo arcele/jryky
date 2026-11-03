@@ -1,14 +1,14 @@
 import { palettes, defaultPalette } from './palettes';
 
 type RGB = [number, number, number];
-type Colors = [RGB, RGB];
+type Colors = [RGB, RGB, RGB];
 
 type Dot = {
   angle: number;
   distance: number;
   radius: number;
   alpha: number;
-  color: 0 | 1;
+  color: 0 | 1 | 2;
   depth: number;
 };
 
@@ -92,7 +92,7 @@ if (canvas && hero) {
           distance: Math.sqrt(random()) * maxDistance,
           radius: (2.5 + random() * 8) * (0.75 + depth * 0.3),
           alpha: 0.18 + random() * 0.56,
-          color: random() > 0.42 ? 0 : 1,
+          color: Math.floor(random() * 3) as 0 | 1 | 2,
           depth,
         };
       });

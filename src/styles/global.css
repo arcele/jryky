@@ -212,30 +212,78 @@ h1 {
   position: absolute;
   bottom: 1.6rem;
   left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
+  width: 10rem;
+  height: 2.75rem;
   transform: translateX(-50%);
-  white-space: nowrap;
-  color: var(--muted);
-  font-size: 0.8rem;
 }
 
 .palette-control[hidden] { display: none; }
 
-.palette-control select {
-  min-height: 2.75rem;
-  max-width: 11rem;
-  padding: 0.4rem 0.65rem;
-  border: 1px solid var(--line);
-  border-radius: 0.6rem;
-  background: var(--surface-solid);
-  color: var(--ink);
-  font: inherit;
-  cursor: pointer;
+.palette-stops {
+  position: absolute;
+  inset: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
 }
 
-.palette-control select:focus-visible {
+.palette-stops span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.palette-control input {
+  position: relative;
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.palette-control input::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.palette-control input::-moz-range-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.palette-control input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  border: 2px solid var(--surface-solid);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.palette-control input::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--surface-solid);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.palette-control input:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
