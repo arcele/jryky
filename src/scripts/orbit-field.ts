@@ -1,3 +1,8 @@
+import { palettes, defaultPalette } from './palettes';
+
+type RGB = [number, number, number];
+type Colors = [RGB, RGB];
+
 type Dot = {
   angle: number;
   distance: number;
@@ -29,15 +34,39 @@ if (canvas && hero) {
     let pointerY = 0;
     let targetX = 0;
     let targetY = 0;
-    let colors: [string, string] = readColors();
+    let colors: Colors = readColors();
+    let fromColors: Colors = colors;
+    let targetColors: Colors = colors;
+    let transitionStart = -Infinity;
+    const transitionDuration = 800;
     let dots: Dot[] = [];
 
-    function readColors() {
-      const styles = getComputedStyle(document.documentElement);
-      return [
-        styles.getPropertyValue('--dot-primary').trim() || '#075985',
-        styles.getPropertyValue('--dot-secondary').trim() || '#c9c1bc',
-      ] as [string, string];
+    function readColors(): Colors {
+      const root = document.documentElement;
+      const dark = root.dataset.theme === 'dark' ||
+        (!root.dataset.theme && colorSchemeQuery.matches);
+      const palette = palettes.find((item) => item.id === root.dataset.palette) ??
+        palettes.find((item) => item.id === defaultPalette())!;
+      return palette[dark ? 'dark' : 'light'].map((hex) =>
+        [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)) as RGB,
+      ) as Colors;
+    }
+
+    function interpolateColors(time: number): Colors {
+      const progress = motionQuery.matches ? 1 : Math.min(1, (time - transitionStart) / transitionDuration);
+      const eased = progress * progress * (3 - 2 * progress);
+      return targetColors.map((target, index) => target.map((channel, component) =>
+        fromColors[index]![component]! + (channel - fromColors[index]![component]!) * eased,
+      ) as RGB) as Colors;
+    }
+
+    function changeColors() {
+      const now = performance.now();
+      // Start from the current blended colors, even during rapid switching.
+      fromColors = interpolateColors(now);
+      targetColors = readColors();
+      transitionStart = now;
+      draw();
     }
 
     function seededRandom(seed: number) {
@@ -79,12 +108,13 @@ if (canvas && hero) {
       field.style.width = `${width}px`;
       field.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      colors = readColors();
       createDots();
       start();
     }
 
     function draw() {
+      colors = interpolateColors(performance.now());
+      const fills = colors.map((color) => `rgb(${color.join(', ')})`);
       ctx.clearRect(0, 0, width, height);
       const centerX = width / 2 + pointerX * 20;
       const centerY = height * 0.43 + pointerY * 12;
@@ -100,7 +130,7 @@ if (canvas && hero) {
         if (x < -30 || x > width + 30 || y < -30 || y > height + 30) continue;
 
         ctx.beginPath();
-        ctx.fillStyle = colors[dot.color];
+        ctx.fillStyle = fills[dot.color]!;
         ctx.globalAlpha = dot.alpha;
         ctx.arc(x, y, dot.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -142,16 +172,10 @@ if (canvas && hero) {
 
     document.addEventListener('visibilitychange', start);
     motionQuery.addEventListener('change', start);
-    colorSchemeQuery.addEventListener('change', () => {
-      colors = readColors();
-      draw();
-    });
+    colorSchemeQuery.addEventListener('change', changeColors);
     new ResizeObserver(resize).observe(host);
 
-    const themeObserver = new MutationObserver(() => {
-      colors = readColors();
-      draw();
-    });
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    const themeObserver = new MutationObserver(changeColors);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-palette'] });
   }
 }

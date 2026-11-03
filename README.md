@@ -15,11 +15,17 @@ Create a production build with `npm run build`. The static output is written to
 
 ## Theme architecture
 
-Visual colors live as semantic custom properties at the top of
-`src/styles/global.css`. The canvas reads `--dot-primary` and
-`--dot-secondary`, so future themes can change both the page and the generated
-art without modifying the animation.
+Page colors live as semantic custom properties in `src/styles/global.css` and follow
+system light/dark mode. Explicit `data-theme="light"` and `data-theme="dark"` hooks
+remain available independently of the bubble palette.
 
-The current build follows the device color preference automatically. Explicit
-`data-theme="light"` and `data-theme="dark"` hooks are also ready for a future
-manual theme control.
+Bubble palettes live in `src/scripts/palettes.ts`. Add an ID, label, and two hex
+colors for each of light and dark mode; the selector builds its options from that
+registry. `palette-selector.ts` saves the visitor's choice when browser storage is
+available and sets `data-palette` on the root element. Automatic currently uses
+Ocean; `defaultPalette()` is the place to add future seasonal/date rules without
+overriding explicit visitor choices.
+
+The canvas blends palette colors over 800 ms without recreating dots or resetting
+motion. Rapid switches blend from the current colors. Reduced-motion preferences
+use an immediate color change and a static field.

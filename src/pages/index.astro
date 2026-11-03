@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Logo from '../assets/jryky-logo.svg';
+import { palettes } from '../scripts/palettes';
 
 const links = [
   { label: 'GitHub', href: 'https://github.com/arcele', icon: 'github' },
@@ -143,6 +144,14 @@ const structuredData = {
           ))}
         </nav>
 
+        <label class="palette-control" hidden>
+          <span>Bubble colors</span>
+          <select id="bubble-palette">
+            <option value="auto">Automatic</option>
+            {palettes.map((palette) => <option value={palette.id}>{palette.label}</option>)}
+          </select>
+        </label>
+
         <div class="scroll-cue" aria-hidden="true"><span></span></div>
       </header>
 
@@ -203,6 +212,7 @@ const structuredData = {
     </footer>
 
     <script>
+      import '../scripts/palette-selector.ts';
       import '../scripts/orbit-field.ts';
     </script>
   </body>
