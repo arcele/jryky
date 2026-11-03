@@ -9,10 +9,18 @@ const links = [
 
 const projects = [
   {
+    name: 'Just My Scores',
+    url: 'https://justmyscores.com',
+    domain: 'justmyscores.com',
+    image: '/assets/projects/justmyscores.png',
+    description:
+      'Sometimes you just want to know how your teams are doing. Pick your favorite NFL, MLB, NBA, NHL, and college football teams and get one simple scoreboard. No clutter, no account required.',
+  },
+  {
     name: 'Free Jumbo Jack',
     url: 'https://freejumbojack.com',
     domain: 'freejumbojack.com',
-    image: '/assets/projects/burger-sm.png',
+    image: '/assets/projects/burger-alt-2.png',
     description:
       'The Padres give out free cheeseburgers whenever they hit a homer the previous night.  This is a one stop shop to see if San Diegans can get that free burger.  It also serves some other markets like Los Angeles and Arizona, and even some football teams who have similar giveaways.',
   },
@@ -20,7 +28,7 @@ const projects = [
     name: 'When We Match',
     url: 'https://whenwematch.com',
     domain: 'whenwematch.com',
-    image: '/assets/projects/when-we-match.svg',
+    image: '/assets/projects/when-we-match.png',
     description:
       'You ever wonder when your human years exactly match how old your dog is in dog years?  Yeah, don\'t worry, neither have most other sane people, but I did.  And I made a site for you to plug in your date of birth and your dog\'s date of birth to find that exact time.',
   },
@@ -30,7 +38,7 @@ const projects = [
     domain: 'numbereeno.com',
     image: '/assets/projects/numbereeno.svg',
     description:
-      'Way back in the day, this was just a sketch on SquareONE television.  I thought it was neat then, and many years later I turned it into a website.  It\'s easy to pick up on, so check it out.',
+      'Way back in the day, this was just <a href="https://www.youtube.com/watch?v=KjZJ3TV-MyM" target="_blank" rel="noreferrer">a sketch on SquareONE television</a>.  I thought it was neat then, and many years later I turned it into a website.  It\'s easy to pick up on, so check it out.',
   },
   {
     name: 'Cochl',
@@ -150,7 +158,8 @@ const structuredData = {
             </p>
             <p class="aside">
               I’ve been building things on the internet since 1994.  Sometimes professionally,
-              sometimes because I wanted to.
+              sometimes because I wanted to.  I think the internet should be a fun, informative 
+              place.  There's room to make money, but it shouldn't be the whole point.
             </p>
           </div>
         </div>
@@ -164,13 +173,14 @@ const structuredData = {
           <ul class="project-list">
             {projects.map((project) => (
               <li>
-                <a class="project-card" href={project.url} target="_blank" rel="noreferrer">
-                  <span class="project-image" aria-hidden="true">
+                <div class="project-card">
+                  <span class:list={['project-image', { 'project-image--when-we-match': project.name === 'When We Match', 'project-image--burger': project.name === 'Free Jumbo Jack' }]} aria-hidden="true">
                     <img src={project.image} alt="" width="160" height="160" loading="lazy" />
                   </span>
                   <span class="project-copy">
-                    <span class="project-name">{project.name}</span>
-                    <span class="project-description">{project.description}</span>
+                    <a class="project-name" href={project.url} target="_blank" rel="noreferrer">{project.name}</a>
+                    {/* Descriptions are trusted, repository-authored HTML. */}
+                    <span class="project-description" set:html={project.description} />
                     <span class="project-domain">
                       {project.domain}
                       <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -178,7 +188,7 @@ const structuredData = {
                       </svg>
                     </span>
                   </span>
-                </a>
+                </div>
               </li>
             ))}
           </ul>

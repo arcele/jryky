@@ -400,6 +400,7 @@ h1 {
 }
 
 .project-card {
+  position: relative;
   display: grid;
   min-height: 100%;
   padding: clamp(1.1rem, 2.5vw, 1.5rem);
@@ -418,7 +419,7 @@ h1 {
 }
 
 .project-card:hover,
-.project-card:focus-visible {
+.project-card:focus-within {
   border-color: color-mix(in srgb, var(--primary) 46%, var(--line));
   box-shadow: 0 18px 46px rgba(30, 52, 64, 0.12);
   outline: none;
@@ -442,7 +443,7 @@ h1 {
 }
 
 .project-card:hover .project-image::after,
-.project-card:focus-visible .project-image::after {
+.project-card:focus-within .project-image::after {
   transform: rotate(24deg);
 }
 
@@ -453,6 +454,19 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 50%;
   object-fit: cover;
+}
+
+.project-image--when-we-match img {
+  box-sizing: border-box;
+  padding: 16%;
+  background: #000;
+  object-fit: contain;
+}
+
+.project-image--burger img {
+  box-sizing: border-box;
+  padding: 12%;
+  object-fit: contain;
 }
 
 .project-copy {
@@ -467,6 +481,35 @@ h1 {
   font-size: 1.15rem;
   font-weight: 600;
   line-height: 1.25;
+  text-decoration: none;
+}
+
+.project-name::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.35rem;
+  content: '';
+}
+
+.project-name:focus-visible {
+  outline: none;
+}
+
+.project-name:focus-visible::after {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.project-description a {
+  position: relative;
+  z-index: 1;
+  color: var(--primary-deep);
+  text-underline-offset: 0.15em;
+}
+
+.project-description a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .project-description {
