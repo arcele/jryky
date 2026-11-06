@@ -16,7 +16,10 @@ if (slider) {
   function apply() {
     const palette = palettes[Number(slider!.value)];
     if (!palette) return;
-    document.documentElement.dataset.palette = palette.id;
+    const root = document.documentElement;
+    root.dataset.palette = palette.id;
+    root.style.setProperty('--portrait-orbit-light', palette.light[0]);
+    root.style.setProperty('--portrait-orbit-dark', palette.dark[0]);
     slider!.setAttribute('aria-valuetext', palette.label);
     return palette.id;
   }

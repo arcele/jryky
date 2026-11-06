@@ -397,11 +397,13 @@ h1 {
 }
 
 .portrait-orbit {
+  --orbit-accent: light-dark(var(--portrait-orbit-light, var(--primary)), var(--portrait-orbit-dark, var(--primary)));
   position: absolute;
   inset: -1rem;
-  border: 1px dashed color-mix(in srgb, var(--primary) 48%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--orbit-accent) 48%, transparent);
   border-radius: 50%;
   animation: portrait-orbit 28s linear infinite;
+  transition: border-color 800ms ease;
 }
 
 .portrait-orbit::after {
@@ -411,7 +413,8 @@ h1 {
   width: 0.65rem;
   height: 0.65rem;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--orbit-accent);
+  transition: background-color 800ms ease;
   box-shadow: 0 0 0 5px var(--page);
   content: '';
 }
@@ -726,6 +729,11 @@ footer p {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .portrait-orbit,
+  .portrait-orbit::after {
+    transition: none;
+  }
+
   html {
     scroll-behavior: auto;
   }
