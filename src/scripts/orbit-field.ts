@@ -14,6 +14,7 @@ type Dot = {
 
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
+const densitySlider = document.querySelector<HTMLInputElement>('#dot-density');
 
 if (canvas && hero) {
   const context = canvas.getContext('2d');
@@ -40,6 +41,16 @@ if (canvas && hero) {
     let transitionStart = -Infinity;
     const transitionDuration = 800;
     let dots: Dot[] = [];
+    let defaultDotCount = 0;
+    let targetDotCount = 0;
+    let previousDotCount = 0;
+    let densityChangeTime = -Infinity;
+
+    function visibleDotCount(time: number) {
+      if (motionQuery.matches) return targetDotCount;
+      const progress = Math.min(1, (time - densityChangeTime) / 220);
+      return previousDotCount + (targetDotCount - previousDotCount) * progress;
+    }
 
     function readColors(): Colors {
       const root = document.documentElement;
@@ -82,10 +93,14 @@ if (canvas && hero) {
 
     function createDots() {
       const random = seededRandom(20140925);
-      const count = width < 600 ? 100 : width < 1000 ? 150 : 220;
+      defaultDotCount = width < 600 ? 100 : width < 1000 ? 150 : 220;
+      targetDotCount = Math.round(defaultDotCount * (densitySlider?.valueAsNumber ?? 100) / 100);
+      previousDotCount = targetDotCount;
+      // Keep a seeded pool so changing density never regenerates existing dots.
+      const maxCount = Math.round(defaultDotCount * Number(densitySlider?.max ?? 100) / 100);
       const maxDistance = Math.max(width * 0.57, height * 0.8);
 
-      dots = Array.from({ length: count }, (_, index) => {
+      dots = Array.from({ length: maxCount }, (_, index) => {
         const depth = index % 2 === 0 ? 0.55 : 1;
         return {
           angle: random() * Math.PI * 2,
@@ -113,13 +128,17 @@ if (canvas && hero) {
     }
 
     function draw() {
-      colors = interpolateColors(performance.now());
+      const now = performance.now();
+      colors = interpolateColors(now);
+      const count = visibleDotCount(now);
       const fills = colors.map((color) => `rgb(${color.join(', ')})`);
       ctx.clearRect(0, 0, width, height);
       const centerX = width / 2 + pointerX * 20;
       const centerY = height * 0.43 + pointerY * 12;
 
-      for (const dot of dots) {
+      for (let index = 0; index < Math.ceil(count); index++) {
+        const dot = dots[index]!;
+        const visibility = Math.min(1, count - index);
         const direction = dot.depth === 1 ? 1 : -1;
         const speed = dot.depth === 1 ? 0.000035 : 0.000018;
         const angle = dot.angle + elapsed * speed * direction;
@@ -131,7 +150,7 @@ if (canvas && hero) {
 
         ctx.beginPath();
         ctx.fillStyle = fills[dot.color]!;
-        ctx.globalAlpha = dot.alpha;
+        ctx.globalAlpha = dot.alpha * visibility;
         ctx.arc(x, y, dot.radius, 0, Math.PI * 2);
         ctx.fill();
       }
@@ -169,6 +188,19 @@ if (canvas && hero) {
       targetX = 0;
       targetY = 0;
     });
+
+    if (densitySlider) {
+      const slider = densitySlider;
+      slider.closest<HTMLElement>('.density-control')!.hidden = false;
+      slider.addEventListener('input', () => {
+        const now = performance.now();
+        previousDotCount = visibleDotCount(now);
+        targetDotCount = Math.round(defaultDotCount * slider.valueAsNumber / 100);
+        densityChangeTime = now;
+        slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
+        if (motionQuery.matches) draw();
+      });
+    }
 
     document.addEventListener('visibilitychange', start);
     motionQuery.addEventListener('change', start);

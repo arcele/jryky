@@ -195,7 +195,7 @@ h1 {
 
 .social-nav {
   position: absolute;
-  bottom: 5rem;
+  bottom: 7.75rem;
   left: 50%;
   display: flex;
   gap: 0.6rem;
@@ -210,12 +210,14 @@ h1 {
 
 .palette-control {
   position: absolute;
-  bottom: 1.6rem;
+  bottom: 4.35rem;
   left: 50%;
   width: 10rem;
   height: 2.75rem;
   transform: translateX(-50%);
 }
+
+.density-control { bottom: 1.6rem; }
 
 .palette-control[hidden] { display: none; }
 
@@ -642,7 +644,7 @@ footer p {
   }
 
   .social-nav {
-    bottom: 5rem;
+    bottom: 7.75rem;
     width: calc(100% - 2rem);
     justify-content: stretch;
   }
