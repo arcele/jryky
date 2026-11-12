@@ -17,6 +17,28 @@ const hero = document.querySelector<HTMLElement>('.hero');
 const speedSlider = document.querySelector<HTMLInputElement>('#dot-speed');
 const densitySlider = document.querySelector<HTMLInputElement>('#dot-density');
 
+function restoreSlider(slider: HTMLInputElement | null, storageKey: string) {
+  if (!slider) return;
+  slider.value = slider.defaultValue;
+  try {
+    const stored = localStorage.getItem(storageKey);
+    if (stored === null || stored.trim() === '') return;
+    const value = Number(stored);
+    const min = Number(slider.min);
+    const max = Number(slider.max);
+    const step = Number(slider.step);
+    if (Number.isFinite(value) && value >= min && value <= max &&
+        Number.isInteger((value - min) / step)) {
+      slider.value = String(value);
+    }
+  } catch { /* Keep the default when browser storage is unavailable. */ }
+}
+
+// Restore before creating the dot pool or starting the first animation frame.
+restoreSlider(densitySlider, 'jryky.dot-density');
+restoreSlider(speedSlider, 'jryky.dot-speed');
+
+
 if (canvas && hero) {
   const context = canvas.getContext('2d');
 
@@ -32,7 +54,7 @@ if (canvas && hero) {
     let frameId = 0;
     let lastTime = performance.now();
     let elapsed = 0;
-    let speedMultiplier = 1;
+    let speedMultiplier = 3 ** (((speedSlider?.valueAsNumber ?? 100) - 100) / 100);
     let pointerX = 0;
     let pointerY = 0;
     let targetX = 0;
@@ -193,6 +215,7 @@ if (canvas && hero) {
 
     if (densitySlider) {
       const slider = densitySlider;
+      slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
       slider.closest<HTMLElement>('.density-control')!.hidden = false;
       slider.addEventListener('input', () => {
         const now = performance.now();
@@ -200,17 +223,20 @@ if (canvas && hero) {
         targetDotCount = Math.round(defaultDotCount * slider.valueAsNumber / 100);
         densityChangeTime = now;
         slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
+        try { localStorage.setItem('jryky.dot-density', slider.value); } catch { /* Optional persistence. */ }
         if (motionQuery.matches) draw();
       });
     }
 
     if (speedSlider) {
       const slider = speedSlider;
+      slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
       slider.closest<HTMLElement>('.speed-control')!.hidden = false;
       slider.addEventListener('input', () => {
         // Accumulate scaled time so speed changes never jump orbital phase.
         speedMultiplier = 3 ** ((slider.valueAsNumber - 100) / 100);
         slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
+        try { localStorage.setItem('jryky.dot-speed', slider.value); } catch { /* Optional persistence. */ }
       });
     }
 
