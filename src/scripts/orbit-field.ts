@@ -12,8 +12,18 @@ type Dot = {
   depth: number;
 };
 
+type FallenDot = {
+  x: number;
+  y: number;
+  velocityY: number;
+  radius: number;
+  alpha: number;
+  color: Dot['color'];
+};
+
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
+const dropButton = document.querySelector<HTMLButtonElement>('#drop-dots');
 const reverseButton = document.querySelector<HTMLButtonElement>('#reverse-dots');
 const speedSlider = document.querySelector<HTMLInputElement>('#dot-speed');
 const densitySlider = document.querySelector<HTMLInputElement>('#dot-density');
@@ -47,6 +57,8 @@ if (canvas && hero) {
     const field = canvas;
     const host = hero;
     const ctx = context;
+    const fallenField = document.querySelector<HTMLCanvasElement>('.fallen-field');
+    const fallenContext = fallenField?.getContext('2d') ?? ctx;
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
     let width = 0;
@@ -76,6 +88,11 @@ if (canvas && hero) {
     let transitionStart = -Infinity;
     const transitionDuration = 800;
     let dots: Dot[] = [];
+    let generation = 0;
+    let fieldState: 'orbit' | 'fallen' | 'renewing' = 'orbit';
+    let fallenDots: FallenDot[] = [];
+    let effectTime = 0;
+    let renewalStart = 0;
     let defaultDotCount = 0;
     let targetDotCount = 0;
     let previousDotCount = 0;
@@ -127,7 +144,7 @@ if (canvas && hero) {
     }
 
     function createDots() {
-      const random = seededRandom(20140925);
+      const random = seededRandom(20140925 + generation);
       defaultDotCount = width < 600 ? 100 : width < 1000 ? 150 : 220;
       targetDotCount = Math.round(defaultDotCount * (densitySlider?.valueAsNumber ?? 100) / 100);
       previousDotCount = targetDotCount;
@@ -150,16 +167,74 @@ if (canvas && hero) {
 
     function resize() {
       const bounds = host.getBoundingClientRect();
+      const previousWidth = width;
+      const previousHeight = height;
       width = bounds.width;
       height = bounds.height;
+      if (previousWidth && previousHeight) {
+        for (const dot of fallenDots) {
+          dot.x *= width / previousWidth;
+          dot.y = Math.min(height - dot.radius, dot.y * height / previousHeight);
+        }
+      }
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       field.width = Math.round(width * dpr);
       field.height = Math.round(height * dpr);
       field.style.width = `${width}px`;
       field.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (fallenField) {
+        fallenField.width = field.width;
+        fallenField.height = field.height;
+        fallenField.style.width = field.style.width;
+        fallenField.style.height = field.style.height;
+        fallenContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
       createDots();
       start();
+    }
+
+    function orbitPosition(dot: Dot) {
+      const direction = dot.depth === 1 ? 1 : -1;
+      const speed = dot.depth === 1 ? 0.000035 : 0.000018;
+      const angle = dot.angle + elapsed * speed * direction;
+      const stretch = width < 650 ? 0.82 : 1;
+      return {
+        x: width / 2 + pointerX * 20 + Math.cos(angle) * dot.distance * stretch,
+        y: height * 0.43 + pointerY * 12 + Math.sin(angle) * dot.distance * 0.56,
+      };
+    }
+
+    function paintDot(x: number, y: number, radius: number, alpha: number, color: string, layer = ctx) {
+      if (alpha <= 0 || x < -30 || x > width + 30 || y < -30 || y > height + 30) return;
+      layer.beginPath();
+      layer.fillStyle = color;
+      layer.globalAlpha = alpha;
+      layer.arc(x, y, radius, 0, Math.PI * 2);
+      layer.fill();
+    }
+
+    function advanceFallenDots(delta: number) {
+      // Small physics steps keep impacts consistent across different frame rates.
+      const steps = Math.ceil(delta / 8);
+      const step = delta / steps;
+      for (const dot of fallenDots) {
+        const floor = height - dot.radius;
+        if (dot.y >= floor && dot.velocityY === 0) continue;
+        const restitution = 0.38 + dot.radius * 0.008;
+        for (let index = 0; index < steps; index++) {
+          dot.velocityY += 0.0014 * step;
+          dot.y += dot.velocityY * step;
+          if (dot.y >= floor) {
+            dot.y = floor;
+            dot.velocityY = -dot.velocityY * restitution;
+            if (Math.abs(dot.velocityY) < 0.06) {
+              dot.velocityY = 0;
+              break;
+            }
+          }
+        }
+      }
     }
 
     function draw() {
@@ -168,34 +243,40 @@ if (canvas && hero) {
       const count = visibleDotCount(now);
       const fills = colors.map((color) => `rgb(${color.join(', ')})`);
       ctx.clearRect(0, 0, width, height);
-      const centerX = width / 2 + pointerX * 20;
-      const centerY = height * 0.43 + pointerY * 12;
+      if (fallenContext !== ctx) fallenContext.clearRect(0, 0, width, height);
 
-      for (let index = 0; index < Math.ceil(count); index++) {
-        const dot = dots[index]!;
-        const visibility = Math.min(1, count - index);
-        const direction = dot.depth === 1 ? 1 : -1;
-        const speed = dot.depth === 1 ? 0.000035 : 0.000018;
-        const angle = dot.angle + elapsed * speed * direction;
-        const stretch = width < 650 ? 0.82 : 1;
-        const x = centerX + Math.cos(angle) * dot.distance * stretch;
-        const y = centerY + Math.sin(angle) * dot.distance * 0.56;
-
-        if (x < -30 || x > width + 30 || y < -30 || y > height + 30) continue;
-
-        ctx.beginPath();
-        ctx.fillStyle = fills[dot.color]!;
-        ctx.globalAlpha = dot.alpha * visibility;
-        ctx.arc(x, y, dot.radius, 0, Math.PI * 2);
-        ctx.fill();
+      const renewalProgress = motionQuery.matches ? 1 : Math.min(1, (effectTime - renewalStart) / 1500);
+      if (fieldState === 'renewing' && renewalProgress >= 1) {
+        fallenDots = [];
+        fieldState = 'orbit';
+        if (dropButton) dropButton.disabled = false;
       }
 
+      if (fieldState !== 'fallen') {
+        const opacity = fieldState === 'renewing' ? Math.min(1, renewalProgress * 2) : 1;
+        for (let index = 0; index < Math.ceil(count); index++) {
+          const dot = dots[index]!;
+          const position = orbitPosition(dot);
+          const visibility = Math.min(1, count - index);
+          paintDot(position.x, position.y, dot.radius, dot.alpha * visibility * opacity, fills[dot.color]!);
+        }
+      }
+
+      const oldOpacity = fieldState === 'renewing' ? 1 - renewalProgress : 1;
+      for (const dot of fallenDots) {
+        const floor = height - dot.radius;
+        const y = motionQuery.matches ? floor : dot.y;
+        paintDot(dot.x, y, dot.radius, dot.alpha * oldOpacity, fills[dot.color]!, fallenContext);
+      }
       ctx.globalAlpha = 1;
+      fallenContext.globalAlpha = 1;
     }
 
     function animate(time: number) {
       const delta = Math.min(time - lastTime, 50);
       lastTime = time;
+      effectTime += delta;
+      advanceFallenDots(delta);
       elapsed += delta * speedMultiplier * rotationDirection(time);
       pointerX += (targetX - pointerX) * 0.035;
       pointerY += (targetY - pointerY) * 0.035;
@@ -205,6 +286,12 @@ if (canvas && hero) {
 
     function start() {
       cancelAnimationFrame(frameId);
+      if (motionQuery.matches) {
+        for (const dot of fallenDots) {
+          dot.y = height - dot.radius;
+          dot.velocityY = 0;
+        }
+      }
       if (motionQuery.matches || document.hidden) {
         draw();
         return;
@@ -261,6 +348,49 @@ if (canvas && hero) {
         directionChangeTime = now;
         button.classList.toggle('is-reversed', targetDirection < 0);
         button.setAttribute('aria-pressed', String(targetDirection < 0));
+      });
+    }
+
+    if (dropButton) {
+      const button = dropButton;
+      button.closest<HTMLElement>('.field-actions')!.hidden = false;
+      button.addEventListener('click', () => {
+        if (fieldState === 'renewing') return;
+        if (fieldState === 'orbit') {
+          const count = visibleDotCount(performance.now());
+          fallenDots = dots.slice(0, Math.ceil(count)).map((dot, index) => {
+            const position = orbitPosition(dot);
+            return {
+              x: position.x,
+              y: position.y,
+              velocityY: 0,
+              radius: dot.radius,
+              alpha: dot.alpha * Math.min(1, count - index),
+              color: dot.color,
+            };
+          }).filter((dot) => dot.x + dot.radius >= 0 && dot.x - dot.radius <= width &&
+            dot.y + dot.radius >= 0 && dot.y - dot.radius <= height);
+          if (motionQuery.matches) {
+            for (const dot of fallenDots) {
+              dot.y = height - dot.radius;
+              dot.velocityY = 0;
+            }
+          }
+          fieldState = 'fallen';
+          button.classList.add('is-dropped');
+          button.setAttribute('aria-label', 'Create a new dot field');
+          button.title = 'Create a new dot field';
+        } else {
+          generation++;
+          createDots();
+          renewalStart = effectTime;
+          fieldState = 'renewing';
+          button.disabled = true;
+          button.classList.remove('is-dropped');
+          button.setAttribute('aria-label', 'Drop dots');
+          button.title = 'Drop dots';
+        }
+        draw();
       });
     }
 

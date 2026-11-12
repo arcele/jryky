@@ -108,6 +108,7 @@ const structuredData = {
     <main>
       <header class="hero" aria-labelledby="site-title">
         <canvas class="orbit-field" aria-hidden="true"></canvas>
+        <canvas class="fallen-field" aria-hidden="true"></canvas>
         <div class="hero-glow" aria-hidden="true"></div>
 
         <div class="hero-content">
@@ -213,6 +214,21 @@ const structuredData = {
               <path d="M20 10a8 8 0 0 0-14-3L3 10m0-6v6h6" />
               <path d="M4 14a8 8 0 0 0 14 3l3-3m0 6v-6h-6" />
             </svg>
+          </button>
+          <button
+            id="drop-dots"
+            type="button"
+            aria-label="Drop dots"
+            title="Drop dots"
+          >
+            <span class="drop-icon-window" aria-hidden="true">
+              <svg class="drop-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 4v16m-6-6 6 6 6-6" />
+              </svg>
+              <svg class="drop-reset-dot" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="4" />
+              </svg>
+            </span>
           </button>
         </div>
 
