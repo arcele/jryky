@@ -14,6 +14,7 @@ type Dot = {
 
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
+const speedSlider = document.querySelector<HTMLInputElement>('#dot-speed');
 const densitySlider = document.querySelector<HTMLInputElement>('#dot-density');
 
 if (canvas && hero) {
@@ -31,6 +32,7 @@ if (canvas && hero) {
     let frameId = 0;
     let lastTime = performance.now();
     let elapsed = 0;
+    let speedMultiplier = 1;
     let pointerX = 0;
     let pointerY = 0;
     let targetX = 0;
@@ -161,7 +163,7 @@ if (canvas && hero) {
     function animate(time: number) {
       const delta = Math.min(time - lastTime, 50);
       lastTime = time;
-      elapsed += delta;
+      elapsed += delta * speedMultiplier;
       pointerX += (targetX - pointerX) * 0.035;
       pointerY += (targetY - pointerY) * 0.035;
       draw();
@@ -199,6 +201,16 @@ if (canvas && hero) {
         densityChangeTime = now;
         slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
         if (motionQuery.matches) draw();
+      });
+    }
+
+    if (speedSlider) {
+      const slider = speedSlider;
+      slider.closest<HTMLElement>('.speed-control')!.hidden = false;
+      slider.addEventListener('input', () => {
+        // Accumulate scaled time so speed changes never jump orbital phase.
+        speedMultiplier = 3 ** ((slider.valueAsNumber - 100) / 100);
+        slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
       });
     }
 
