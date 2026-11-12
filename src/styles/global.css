@@ -747,3 +747,72 @@ footer p {
     scroll-behavior: auto !important;
   }
 }
+
+/* Aligned to the final theme stop, including the range thumb's inset. */
+.custom-theme-panel {
+  position: absolute;
+  z-index: 10;
+  bottom: calc(7.1rem + 1.375rem + 0.75rem);
+  left: 50%;
+  width: min(17rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 1rem;
+  transform: translateX(-50%);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface-solid);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 180ms ease, visibility 180ms;
+}
+.custom-theme-panel[hidden] { display: none; }
+.custom-theme-panel.is-open { opacity: 1; visibility: visible; }
+.custom-theme-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: calc(50% + 72px - 7px);
+  width: 12px;
+  height: 12px;
+  transform: rotate(45deg);
+  background: var(--surface-solid);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.custom-theme-panel h2 {
+  margin: 0 0 0.8rem;
+  font: 500 1rem var(--display);
+}
+.custom-theme-swatches { display: flex; gap: 0.75rem; }
+.custom-theme-swatches input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+.custom-theme-swatches input::-webkit-color-swatch-wrapper { padding: 0; }
+.custom-theme-swatches input::-webkit-color-swatch { border: 0; }
+.custom-theme-swatches input::-moz-color-swatch { border: 0; }
+.custom-theme-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
+.custom-theme-actions button {
+  min-height: 2.75rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: var(--page);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.custom-theme-panel :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .custom-theme-panel { transition: none; }
+}

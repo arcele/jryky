@@ -144,7 +144,7 @@ const structuredData = {
           ))}
         </nav>
 
-        <div class="palette-control" hidden>
+        <div class="palette-control theme-control" hidden>
           <div class="palette-stops" aria-hidden="true">
             {palettes.map(() => <span></span>)}
           </div>
@@ -159,6 +159,19 @@ const structuredData = {
             aria-valuetext={palettes[0].label}
           />
         </div>
+
+        <section class="custom-theme-panel" role="dialog" aria-labelledby="custom-theme-title" tabindex="-1" hidden>
+          <h2 id="custom-theme-title">Your colors</h2>
+          <div class="custom-theme-swatches">
+            <input type="color" value="#7c3aed" aria-label="First custom color" />
+            <input type="color" value="#db2777" aria-label="Second custom color" />
+            <input type="color" value="#f3a9cc" aria-label="Third custom color" />
+          </div>
+          <div class="custom-theme-actions">
+            <button type="button" data-custom-cancel>Cancel</button>
+            <button type="button" data-custom-apply>Apply</button>
+          </div>
+        </section>
 
         <div class="palette-control density-control" hidden>
           <input

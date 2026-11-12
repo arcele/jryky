@@ -7,6 +7,7 @@ export const palettes = [
   { id: 'spring', label: 'Spring', light: ['#399343', '#d4ae18', '#399343'], dark: ['#76cf83', '#f2d65b', '#76cf83'] },
   { id: 'pretty-in-pink', label: 'Pretty in Pink', light: ['#e51b82', '#cc548d', '#f3a9cc'], dark: ['#ff4ba6', '#e981b5', '#ffc1df'] },
   { id: 'greyscale', label: 'Greyscale', light: ['#555555', '#858585', '#b8b8b8'], dark: ['#d4d4d4', '#a0a0a0', '#707070'] },
+  { id: 'custom', label: 'Custom', light: ['#7c3aed', '#db2777', '#f3a9cc'], dark: ['#7c3aed', '#db2777', '#f3a9cc'] },
 ] as const;
 
 export type PaletteId = (typeof palettes)[number]['id'];
@@ -16,4 +17,20 @@ export const isPalette = (value: string | null): value is PaletteId =>
 // Central place for future seasonal/date rules. Explicit choices take precedence.
 export function defaultPalette(): PaletteId {
   return 'ocean';
+}
+
+export type CustomColors = [string, string, string];
+export let customColors: CustomColors = ['#7c3aed', '#db2777', '#f3a9cc'];
+
+export function isCustomColors(value: unknown): value is CustomColors {
+  return Array.isArray(value) && value.length === 3 &&
+    value.every((color) => typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color));
+}
+
+export function updateCustomColors(colors: CustomColors) {
+  customColors = [...colors];
+}
+
+export function paletteColors(palette: (typeof palettes)[number], dark: boolean) {
+  return palette.id === 'custom' ? customColors : palette[dark ? 'dark' : 'light'];
 }

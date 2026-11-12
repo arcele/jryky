@@ -1,4 +1,4 @@
-import { palettes, defaultPalette } from './palettes';
+import { palettes, defaultPalette, paletteColors } from './palettes';
 
 type RGB = [number, number, number];
 type Colors = [RGB, RGB, RGB];
@@ -82,7 +82,7 @@ if (canvas && hero) {
         (!root.dataset.theme && colorSchemeQuery.matches);
       const palette = palettes.find((item) => item.id === root.dataset.palette) ??
         palettes.find((item) => item.id === defaultPalette())!;
-      return palette[dark ? 'dark' : 'light'].map((hex) =>
+      return paletteColors(palette, dark).map((hex) =>
         [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)) as RGB,
       ) as Colors;
     }
