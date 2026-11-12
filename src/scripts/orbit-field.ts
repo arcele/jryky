@@ -245,15 +245,19 @@ if (canvas && hero) {
       ctx.clearRect(0, 0, width, height);
       if (fallenContext !== ctx) fallenContext.clearRect(0, 0, width, height);
 
-      const renewalProgress = motionQuery.matches ? 1 : Math.min(1, (effectTime - renewalStart) / 1500);
-      if (fieldState === 'renewing' && renewalProgress >= 1) {
+      const fadeOutDuration = 1500;
+      const fadeInDuration = 750;
+      const renewalAge = motionQuery.matches ? Infinity : effectTime - renewalStart;
+      const fadeOutProgress = Math.min(1, renewalAge / fadeOutDuration);
+      const fadeInProgress = Math.max(0, Math.min(1, (renewalAge - fadeOutDuration) / fadeInDuration));
+      if (fieldState === 'renewing' && fadeInProgress >= 1) {
         fallenDots = [];
         fieldState = 'orbit';
         if (dropButton) dropButton.disabled = false;
       }
 
       if (fieldState !== 'fallen') {
-        const opacity = fieldState === 'renewing' ? Math.min(1, renewalProgress * 2) : 1;
+        const opacity = fieldState === 'renewing' ? fadeInProgress : 1;
         for (let index = 0; index < Math.ceil(count); index++) {
           const dot = dots[index]!;
           const position = orbitPosition(dot);
@@ -262,7 +266,7 @@ if (canvas && hero) {
         }
       }
 
-      const oldOpacity = fieldState === 'renewing' ? 1 - renewalProgress : 1;
+      const oldOpacity = fieldState === 'renewing' ? 1 - fadeOutProgress : 1;
       for (const dot of fallenDots) {
         const floor = height - dot.radius;
         const y = motionQuery.matches ? floor : dot.y;
