@@ -345,24 +345,6 @@ h1 {
   transform: translateY(0);
 }
 
-.scroll-cue {
-  position: absolute;
-  right: clamp(1.5rem, 4vw, 4rem);
-  bottom: 2.2rem;
-  width: 1px;
-  height: 3.2rem;
-  overflow: hidden;
-  background: var(--line);
-}
-
-.scroll-cue span {
-  display: block;
-  width: 1px;
-  height: 45%;
-  background: var(--primary);
-  animation: scroll-cue 2.3s ease-in-out infinite;
-}
-
 .intro {
   position: relative;
   z-index: 2;
@@ -628,12 +610,6 @@ footer p {
   margin: 0;
 }
 
-@keyframes scroll-cue {
-  0% { transform: translateY(-110%); }
-  45%, 55% { transform: translateY(70%); }
-  100% { transform: translateY(230%); }
-}
-
 @keyframes portrait-orbit {
   to { transform: rotate(360deg); }
 }
@@ -658,11 +634,7 @@ footer p {
     flex: 1;
   }
 
-  .scroll-cue {
-    display: none;
-  }
-
-  .intro-card {
+    .intro-card {
     grid-template-columns: 6.5rem 1fr;
     gap: 1.5rem;
     align-items: start;
