@@ -831,3 +831,46 @@ footer p {
     bottom: calc(6.4125rem + 0.6875rem + 0.75rem);
   }
 }
+
+.field-actions {
+  position: absolute;
+  bottom: 0.225rem;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+}
+.field-actions[hidden] { display: none; }
+.field-actions button {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.field-actions button:hover { color: var(--ink); background: var(--line); }
+.field-actions button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.field-actions svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  transition: transform 1000ms ease-in-out;
+}
+.field-actions .is-reversed svg { transform: rotate(180deg) scaleX(-1); }
+
+@media (max-width: 720px) {
+  .hero-content { padding-bottom: 13.75rem; }
+  .social-nav { bottom: 11.875rem; }
+  .palette-control { bottom: 8.475rem; }
+  .density-control { bottom: 5.725rem; }
+  .speed-control { bottom: 2.975rem; }
+  .custom-theme-panel { bottom: calc(8.475rem + 1.375rem + 0.75rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-actions svg { transition: none; }
+}

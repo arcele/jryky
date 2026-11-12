@@ -14,6 +14,7 @@ type Dot = {
 
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
+const reverseButton = document.querySelector<HTMLButtonElement>('#reverse-dots');
 const speedSlider = document.querySelector<HTMLInputElement>('#dot-speed');
 const densitySlider = document.querySelector<HTMLInputElement>('#dot-density');
 
@@ -55,6 +56,16 @@ if (canvas && hero) {
     let lastTime = performance.now();
     let elapsed = 0;
     let speedMultiplier = 3 ** (((speedSlider?.valueAsNumber ?? 100) - 100) / 100);
+    let previousDirection = 1;
+    let targetDirection = 1;
+    let directionChangeTime = -Infinity;
+
+    function rotationDirection(time: number) {
+      const progress = Math.min(1, (time - directionChangeTime) / 1000);
+      const eased = (1 - Math.cos(progress * Math.PI)) / 2;
+      return previousDirection + (targetDirection - previousDirection) * eased;
+    }
+
     let pointerX = 0;
     let pointerY = 0;
     let targetX = 0;
@@ -185,7 +196,7 @@ if (canvas && hero) {
     function animate(time: number) {
       const delta = Math.min(time - lastTime, 50);
       lastTime = time;
-      elapsed += delta * speedMultiplier;
+      elapsed += delta * speedMultiplier * rotationDirection(time);
       pointerX += (targetX - pointerX) * 0.035;
       pointerY += (targetY - pointerY) * 0.035;
       draw();
@@ -237,6 +248,19 @@ if (canvas && hero) {
         speedMultiplier = 3 ** ((slider.valueAsNumber - 100) / 100);
         slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
         try { localStorage.setItem('jryky.dot-speed', slider.value); } catch { /* Optional persistence. */ }
+      });
+    }
+
+    if (reverseButton) {
+      const button = reverseButton;
+      button.closest<HTMLElement>('.field-actions')!.hidden = false;
+      button.addEventListener('click', () => {
+        const now = performance.now();
+        previousDirection = rotationDirection(now);
+        targetDirection *= -1;
+        directionChangeTime = now;
+        button.classList.toggle('is-reversed', targetDirection < 0);
+        button.setAttribute('aria-pressed', String(targetDirection < 0));
       });
     }
 
