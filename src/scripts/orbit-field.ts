@@ -10,6 +10,9 @@ type Dot = {
   alpha: number;
   color: 0 | 1 | 2;
   depth: number;
+  visibilityFrom: number;
+  visibilityTarget: number;
+  visibilityStart: number;
 };
 
 type FallenDot = {
@@ -87,6 +90,8 @@ if (canvas && hero) {
     let targetColors: Colors = colors;
     let transitionStart = -Infinity;
     const transitionDuration = 800;
+    const fadeOutDuration = 1500;
+    const fadeInDuration = 750;
     let dots: Dot[] = [];
     let generation = 0;
     let fieldState: 'orbit' | 'fallen' | 'renewing' = 'orbit';
@@ -95,13 +100,11 @@ if (canvas && hero) {
     let renewalStart = 0;
     let defaultDotCount = 0;
     let targetDotCount = 0;
-    let previousDotCount = 0;
-    let densityChangeTime = -Infinity;
-
-    function visibleDotCount(time: number) {
-      if (motionQuery.matches) return targetDotCount;
-      const progress = Math.min(1, (time - densityChangeTime) / 220);
-      return previousDotCount + (targetDotCount - previousDotCount) * progress;
+    function dotVisibility(dot: Dot, time: number) {
+      if (motionQuery.matches) return dot.visibilityTarget;
+      const duration = dot.visibilityTarget > dot.visibilityFrom ? fadeInDuration : fadeOutDuration;
+      const progress = Math.min(1, (time - dot.visibilityStart) / duration);
+      return dot.visibilityFrom + (dot.visibilityTarget - dot.visibilityFrom) * progress;
     }
 
     function readColors(): Colors {
@@ -147,7 +150,6 @@ if (canvas && hero) {
       const random = seededRandom(20140925 + generation);
       defaultDotCount = width < 600 ? 100 : width < 1000 ? 150 : 220;
       targetDotCount = Math.round(defaultDotCount * (densitySlider?.valueAsNumber ?? 100) / 100);
-      previousDotCount = targetDotCount;
       // Keep a seeded pool so changing density never regenerates existing dots.
       const maxCount = Math.round(defaultDotCount * Number(densitySlider?.max ?? 100) / 100);
       const maxDistance = Math.max(width * 0.57, height * 0.8);
@@ -161,6 +163,9 @@ if (canvas && hero) {
           alpha: 0.18 + random() * 0.56,
           color: Math.floor(random() * 3) as 0 | 1 | 2,
           depth,
+          visibilityFrom: index < targetDotCount ? 1 : 0,
+          visibilityTarget: index < targetDotCount ? 1 : 0,
+          visibilityStart: -Infinity,
         };
       });
     }
@@ -240,13 +245,10 @@ if (canvas && hero) {
     function draw() {
       const now = performance.now();
       colors = interpolateColors(now);
-      const count = visibleDotCount(now);
       const fills = colors.map((color) => `rgb(${color.join(', ')})`);
       ctx.clearRect(0, 0, width, height);
       if (fallenContext !== ctx) fallenContext.clearRect(0, 0, width, height);
 
-      const fadeOutDuration = 1500;
-      const fadeInDuration = 750;
       const renewalAge = motionQuery.matches ? Infinity : effectTime - renewalStart;
       const fadeOutProgress = Math.min(1, renewalAge / fadeOutDuration);
       const fadeInProgress = Math.max(0, Math.min(1, (renewalAge - fadeOutDuration) / fadeInDuration));
@@ -258,10 +260,10 @@ if (canvas && hero) {
 
       if (fieldState !== 'fallen') {
         const opacity = fieldState === 'renewing' ? fadeInProgress : 1;
-        for (let index = 0; index < Math.ceil(count); index++) {
-          const dot = dots[index]!;
+        for (const dot of dots) {
+          const visibility = dotVisibility(dot, now);
+          if (visibility <= 0) continue;
           const position = orbitPosition(dot);
-          const visibility = Math.min(1, count - index);
           paintDot(position.x, position.y, dot.radius, dot.alpha * visibility * opacity, fills[dot.color]!);
         }
       }
@@ -321,9 +323,15 @@ if (canvas && hero) {
       slider.closest<HTMLElement>('.density-control')!.hidden = false;
       slider.addEventListener('input', () => {
         const now = performance.now();
-        previousDotCount = visibleDotCount(now);
         targetDotCount = Math.round(defaultDotCount * slider.valueAsNumber / 100);
-        densityChangeTime = now;
+        dots.forEach((dot, index) => {
+          const target = index < targetDotCount ? 1 : 0;
+          if (dot.visibilityTarget === target) return;
+          // Reverse an in-progress fade from its current opacity.
+          dot.visibilityFrom = dotVisibility(dot, now);
+          dot.visibilityTarget = target;
+          dot.visibilityStart = now;
+        });
         slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
         try { localStorage.setItem('jryky.dot-density', slider.value); } catch { /* Optional persistence. */ }
         if (motionQuery.matches) draw();
@@ -361,18 +369,18 @@ if (canvas && hero) {
       button.addEventListener('click', () => {
         if (fieldState === 'renewing') return;
         if (fieldState === 'orbit') {
-          const count = visibleDotCount(performance.now());
-          fallenDots = dots.slice(0, Math.ceil(count)).map((dot, index) => {
+          const now = performance.now();
+          fallenDots = dots.map((dot) => {
             const position = orbitPosition(dot);
             return {
               x: position.x,
               y: position.y,
               velocityY: 0,
               radius: dot.radius,
-              alpha: dot.alpha * Math.min(1, count - index),
+              alpha: dot.alpha * dotVisibility(dot, now),
               color: dot.color,
             };
-          }).filter((dot) => dot.x + dot.radius >= 0 && dot.x - dot.radius <= width &&
+          }).filter((dot) => dot.alpha > 0 && dot.x + dot.radius >= 0 && dot.x - dot.radius <= width &&
             dot.y + dot.radius >= 0 && dot.y - dot.radius <= height);
           if (motionQuery.matches) {
             for (const dot of fallenDots) {
