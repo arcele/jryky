@@ -1,4 +1,4 @@
-// Only desktop uses an introductory scroll offset. Mobile opens at the top.
+// Use the introductory scroll offset for the current layout breakpoint.
 const mobileLayout = window.matchMedia('(max-width: 720px)');
 let interacted = false;
 const interactionEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
@@ -15,7 +15,7 @@ function setInitialScroll(restored: boolean) {
   const reloading = navigation?.type === 'reload';
   if (restored || navigation?.type === 'back_forward' || location.hash ||
       (!reloading && window.scrollY !== 0) || interacted) return;
-  window.scrollTo({ top: mobileLayout.matches ? 0 : 82, left: 0, behavior: 'instant' });
+  window.scrollTo({ top: mobileLayout.matches ? 115 : 82, left: 0, behavior: 'instant' });
 }
 
 if (document.readyState === 'complete') {
