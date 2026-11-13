@@ -891,3 +891,9 @@ footer p {
   align-self: start;
   justify-self: start;
 }
+
+.project-image--nwbhf img {
+  padding: 8%;
+  background: #fff;
+  object-fit: contain;
+}
