@@ -131,144 +131,145 @@ const structuredData = {
           -->
         </div>
 
-        <nav class="social-nav" aria-label="Find Ryan online">
-          {links.map((link) => (
-            <a
-              href={link.href}
-              class="social-link"
-              target={link.href.startsWith('http') ? '_blank' : undefined}
-              rel={link.href.startsWith('http') ? 'me noreferrer' : undefined}
-            >
-              <span class="social-icon" aria-hidden="true">
-                {link.icon === 'github' && (
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 .7A11.5 11.5 0 0 0 8.4 23c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.3.1 2 1.3 2 1.3 1.1 2 3 1.4 3.7 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.5-1.3-5.5-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C16.7 3.5 17.7 3.8 17.7 3.8c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.8 5.5-5.5 5.8.4.4.8 1.1.8 2.2v4.4c0 .4.2.7.8.6A11.5 11.5 0 0 0 12 .7Z" />
-                  </svg>
-                )}
-                {link.icon === 'linkedin' && (
-                  <svg viewBox="0 0 24 24">
-                    <path d="M5.2 7.8H1.4V22h3.8V7.8ZM3.3 1A2.3 2.3 0 1 0 3.3 5.6 2.3 2.3 0 0 0 3.3 1ZM22.6 13.8c0-4.3-2.3-6.4-5.4-6.4-2.5 0-3.6 1.4-4.2 2.3V7.8H9.2V22H13v-7c0-1.8.4-3.6 2.7-3.6 2.3 0 2.3 2.1 2.3 3.8V22h3.8l.8-8.2Z" />
-                  </svg>
-                )}
-                {link.icon === 'email' && (
-                  <svg viewBox="0 0 24 24">
-                    <path d="M2.5 4h19A2.5 2.5 0 0 1 24 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 0 17.5v-11A2.5 2.5 0 0 1 2.5 4Zm9.5 9L2.7 6.4c-.4-.3-.8.4-.4.7l8.3 7.3c.8.7 2 .7 2.8 0l8.3-7.3c.4-.3 0-1-.4-.7L12 13Z" />
-                  </svg>
-                )}
-              </span>
-              <span class="social-label">{link.label}</span>
-            </a>
-          ))}
-        </nav>
-
-        <div class="palette-control theme-control" hidden>
-          <div class="palette-stops" aria-hidden="true">
-            {palettes.map(() => (
-              <span></span>
+        <div class="hero-controls">
+          <nav class="social-nav" aria-label="Find Ryan online">
+            {links.map((link) => (
+              <a
+                href={link.href}
+                class="social-link"
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'me noreferrer' : undefined}
+              >
+                <span class="social-icon" aria-hidden="true">
+                  {link.icon === 'github' && (
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 .7A11.5 11.5 0 0 0 8.4 23c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.3.1 2 1.3 2 1.3 1.1 2 3 1.4 3.7 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.5-1.3-5.5-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C16.7 3.5 17.7 3.8 17.7 3.8c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.8 5.5-5.5 5.8.4.4.8 1.1.8 2.2v4.4c0 .4.2.7.8.6A11.5 11.5 0 0 0 12 .7Z" />
+                    </svg>
+                  )}
+                  {link.icon === 'linkedin' && (
+                    <svg viewBox="0 0 24 24">
+                      <path d="M5.2 7.8H1.4V22h3.8V7.8ZM3.3 1A2.3 2.3 0 1 0 3.3 5.6 2.3 2.3 0 0 0 3.3 1ZM22.6 13.8c0-4.3-2.3-6.4-5.4-6.4-2.5 0-3.6 1.4-4.2 2.3V7.8H9.2V22H13v-7c0-1.8.4-3.6 2.7-3.6 2.3 0 2.3 2.1 2.3 3.8V22h3.8l.8-8.2Z" />
+                    </svg>
+                  )}
+                  {link.icon === 'email' && (
+                    <svg viewBox="0 0 24 24">
+                      <path d="M2.5 4h19A2.5 2.5 0 0 1 24 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 0 17.5v-11A2.5 2.5 0 0 1 2.5 4Zm9.5 9L2.7 6.4c-.4-.3-.8.4-.4.7l8.3 7.3c.8.7 2 .7 2.8 0l8.3-7.3c.4-.3 0-1-.4-.7L12 13Z" />
+                    </svg>
+                  )}
+                </span>
+                <span class="social-label">{link.label}</span>
+              </a>
             ))}
-          </div>
-          <input
-            id="bubble-palette"
-            type="range"
-            min="0"
-            max={palettes.length - 1}
-            step="1"
-            value="0"
-            aria-label="Bubble color theme"
-            aria-valuetext={palettes[0].label}
-          />
-        </div>
+          </nav>
 
-        <section
-          class="custom-theme-panel"
-          role="dialog"
-          aria-labelledby="custom-theme-title"
-          tabindex="-1"
-          hidden
-        >
-          <h2 id="custom-theme-title">Your colors</h2>
-          <div class="custom-theme-swatches">
-            <input type="color" value="#7c3aed" aria-label="First custom color" />
-            <input type="color" value="#db2777" aria-label="Second custom color" />
-            <input type="color" value="#f3a9cc" aria-label="Third custom color" />
-          </div>
-          <div class="custom-theme-actions">
-            <button type="button" data-custom-cancel>
-              Cancel
-            </button>
-            <button type="button" data-custom-apply>
-              Apply
-            </button>
-          </div>
-        </section>
-
-        <div class="palette-control density-control" hidden>
-          <input
-            id="dot-density"
-            type="range"
-            min="50"
-            max="150"
-            step="1"
-            value="100"
-            aria-label="Dot density"
-            aria-valuetext="100% of default"
-            title="Dot density"
-          />
-        </div>
-
-        <div class="palette-control speed-control" hidden>
-          <input
-            id="dot-speed"
-            type="range"
-            min="0"
-            max="200"
-            step="1"
-            value="100"
-            aria-label="Dot speed"
-            aria-valuetext="1× normal speed"
-            title="Dot speed"
-          />
-        </div>
-
-        <div class="field-actions" hidden>
-          <button
-            id="reverse-dots"
-            type="button"
-            aria-label="Reverse dot rotation"
-            aria-pressed="false"
-            title="Reverse dot rotation"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+          <div class="palette-control theme-control" hidden>
+            <div class="palette-stops" aria-hidden="true">
+              {palettes.map(() => (
+                <span></span>
+              ))}
+            </div>
+            <input
+              id="bubble-palette"
+              type="range"
+              min="0"
+              max={palettes.length - 1}
+              step="1"
+              value="0"
+              aria-label="Bubble color theme"
+              aria-valuetext={palettes[0].label}
+            />
+            <section
+              class="custom-theme-panel"
+              role="dialog"
+              aria-labelledby="custom-theme-title"
+              tabindex="-1"
+              hidden
             >
-              <path d="M20 10a8 8 0 0 0-14-3L3 10m0-6v6h6" />
-              <path d="M4 14a8 8 0 0 0 14 3l3-3m0 6v-6h-6" />
-            </svg>
-          </button>
-          <button id="drop-dots" type="button" aria-label="Drop dots" title="Drop dots">
-            <span class="drop-icon-window" aria-hidden="true">
+              <h2 id="custom-theme-title">Your colors</h2>
+              <div class="custom-theme-swatches">
+                <input type="color" value="#7c3aed" aria-label="First custom color" />
+                <input type="color" value="#db2777" aria-label="Second custom color" />
+                <input type="color" value="#f3a9cc" aria-label="Third custom color" />
+              </div>
+              <div class="custom-theme-actions">
+                <button type="button" data-custom-cancel>
+                  Cancel
+                </button>
+                <button type="button" data-custom-apply>
+                  Apply
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <div class="palette-control density-control" hidden>
+            <input
+              id="dot-density"
+              type="range"
+              min="50"
+              max="150"
+              step="1"
+              value="100"
+              aria-label="Dot density"
+              aria-valuetext="100% of default"
+              title="Dot density"
+            />
+          </div>
+
+          <div class="palette-control speed-control" hidden>
+            <input
+              id="dot-speed"
+              type="range"
+              min="0"
+              max="200"
+              step="1"
+              value="100"
+              aria-label="Dot speed"
+              aria-valuetext="1× normal speed"
+              title="Dot speed"
+            />
+          </div>
+
+          <div class="field-actions" hidden>
+            <button
+              id="reverse-dots"
+              type="button"
+              aria-label="Reverse dot rotation"
+              aria-pressed="false"
+              title="Reverse dot rotation"
+            >
               <svg
-                class="drop-arrow"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="1.7"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M12 4v16m-6-6 6 6 6-6" />
+                <path d="M20 10a8 8 0 0 0-14-3L3 10m0-6v6h6" />
+                <path d="M4 14a8 8 0 0 0 14 3l3-3m0 6v-6h-6" />
               </svg>
-              <svg class="drop-reset-dot" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="12" cy="12" r="4" />
-              </svg>
-            </span>
-          </button>
+            </button>
+            <button id="drop-dots" type="button" aria-label="Drop dots" title="Drop dots">
+              <span class="drop-icon-window" aria-hidden="true">
+                <svg
+                  class="drop-arrow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 4v16m-6-6 6 6 6-6" />
+                </svg>
+                <svg class="drop-reset-dot" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="4" />
+                </svg>
+              </span>
+            </button>
+          </div>
         </div>
       </header>
 
