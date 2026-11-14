@@ -41,17 +41,22 @@ function restoreSlider(slider: HTMLInputElement | null, storageKey: string) {
     const min = Number(slider.min);
     const max = Number(slider.max);
     const step = Number(slider.step);
-    if (Number.isFinite(value) && value >= min && value <= max &&
-        Number.isInteger((value - min) / step)) {
+    if (
+      Number.isFinite(value) &&
+      value >= min &&
+      value <= max &&
+      Number.isInteger((value - min) / step)
+    ) {
       slider.value = String(value);
     }
-  } catch { /* Keep the default when browser storage is unavailable. */ }
+  } catch {
+    /* Keep the default when browser storage is unavailable. */
+  }
 }
 
 // Restore before creating the dot pool or starting the first animation frame.
 restoreSlider(densitySlider, 'jryky.dot-density');
 restoreSlider(speedSlider, 'jryky.dot-speed');
-
 
 if (canvas && hero) {
   const context = canvas.getContext('2d');
@@ -110,21 +115,28 @@ if (canvas && hero) {
 
     function readColors(): Colors {
       const root = document.documentElement;
-      const dark = root.dataset.theme === 'dark' ||
-        (!root.dataset.theme && colorSchemeQuery.matches);
-      const palette = palettes.find((item) => item.id === root.dataset.palette) ??
+      const dark =
+        root.dataset.theme === 'dark' || (!root.dataset.theme && colorSchemeQuery.matches);
+      const palette =
+        palettes.find((item) => item.id === root.dataset.palette) ??
         palettes.find((item) => item.id === defaultPalette())!;
-      return paletteColors(palette, dark).map((hex) =>
-        [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)) as RGB,
+      return paletteColors(palette, dark).map(
+        (hex) => [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)) as RGB,
       ) as Colors;
     }
 
     function interpolateColors(time: number): Colors {
-      const progress = motionQuery.matches ? 1 : Math.min(1, (time - transitionStart) / transitionDuration);
+      const progress = motionQuery.matches
+        ? 1
+        : Math.min(1, (time - transitionStart) / transitionDuration);
       const eased = progress * progress * (3 - 2 * progress);
-      return targetColors.map((target, index) => target.map((channel, component) =>
-        fromColors[index]![component]! + (channel - fromColors[index]![component]!) * eased,
-      ) as RGB) as Colors;
+      return targetColors.map(
+        (target, index) =>
+          target.map(
+            (channel, component) =>
+              fromColors[index]![component]! + (channel - fromColors[index]![component]!) * eased,
+          ) as RGB,
+      ) as Colors;
     }
 
     function changeColors() {
@@ -165,7 +177,7 @@ if (canvas && hero) {
 
     function createDots() {
       defaultDotCount = width < 600 ? 100 : width < 1000 ? 150 : 220;
-      targetDotCount = Math.round(defaultDotCount * (densitySlider?.valueAsNumber ?? 100) / 100);
+      targetDotCount = Math.round((defaultDotCount * (densitySlider?.valueAsNumber ?? 100)) / 100);
       dots = Array.from({ length: targetDotCount }, () => createDot(true, -Infinity));
     }
 
@@ -178,7 +190,7 @@ if (canvas && hero) {
       if (previousWidth && previousHeight) {
         for (const dot of fallenDots) {
           dot.x *= width / previousWidth;
-          dot.y = Math.min(height - dot.radius, dot.y * height / previousHeight);
+          dot.y = Math.min(height - dot.radius, (dot.y * height) / previousHeight);
         }
       }
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -209,7 +221,14 @@ if (canvas && hero) {
       };
     }
 
-    function paintDot(x: number, y: number, radius: number, alpha: number, color: string, layer = ctx) {
+    function paintDot(
+      x: number,
+      y: number,
+      radius: number,
+      alpha: number,
+      color: string,
+      layer = ctx,
+    ) {
       if (alpha <= 0 || x < -30 || x > width + 30 || y < -30 || y > height + 30) return;
       layer.beginPath();
       layer.fillStyle = color;
@@ -252,7 +271,10 @@ if (canvas && hero) {
 
       const renewalAge = motionQuery.matches ? Infinity : effectTime - renewalStart;
       const fadeOutProgress = Math.min(1, renewalAge / fadeOutDuration);
-      const fadeInProgress = Math.max(0, Math.min(1, (renewalAge - fadeOutDuration) / fadeInDuration));
+      const fadeInProgress = Math.max(
+        0,
+        Math.min(1, (renewalAge - fadeOutDuration) / fadeInDuration),
+      );
       if (fieldState === 'renewing' && fadeInProgress >= 1) {
         fallenDots = [];
         fieldState = 'orbit';
@@ -265,7 +287,13 @@ if (canvas && hero) {
           const visibility = dotVisibility(dot, now);
           if (visibility <= 0) continue;
           const position = orbitPosition(dot);
-          paintDot(position.x, position.y, dot.radius, dot.alpha * visibility * opacity, fills[dot.color]!);
+          paintDot(
+            position.x,
+            position.y,
+            dot.radius,
+            dot.alpha * visibility * opacity,
+            fills[dot.color]!,
+          );
         }
       }
 
@@ -324,7 +352,7 @@ if (canvas && hero) {
       slider.closest<HTMLElement>('.density-control')!.hidden = false;
       slider.addEventListener('input', () => {
         const now = performance.now();
-        targetDotCount = Math.round(defaultDotCount * slider.valueAsNumber / 100);
+        targetDotCount = Math.round((defaultDotCount * slider.valueAsNumber) / 100);
         const activeDots = dots.filter((dot) => dot.visibilityTarget === 1);
         if (activeDots.length > targetDotCount) {
           for (const dot of activeDots.slice(targetDotCount)) {
@@ -338,7 +366,11 @@ if (canvas && hero) {
           }
         }
         slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
-        try { localStorage.setItem('jryky.dot-density', slider.value); } catch { /* Optional persistence. */ }
+        try {
+          localStorage.setItem('jryky.dot-density', slider.value);
+        } catch {
+          /* Optional persistence. */
+        }
         if (motionQuery.matches) draw();
       });
     }
@@ -351,7 +383,11 @@ if (canvas && hero) {
         // Accumulate scaled time so speed changes never jump orbital phase.
         speedMultiplier = 3 ** ((slider.valueAsNumber - 100) / 100);
         slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
-        try { localStorage.setItem('jryky.dot-speed', slider.value); } catch { /* Optional persistence. */ }
+        try {
+          localStorage.setItem('jryky.dot-speed', slider.value);
+        } catch {
+          /* Optional persistence. */
+        }
       });
     }
 
@@ -375,18 +411,26 @@ if (canvas && hero) {
         if (fieldState === 'renewing') return;
         if (fieldState === 'orbit') {
           const now = performance.now();
-          fallenDots = dots.map((dot) => {
-            const position = orbitPosition(dot);
-            return {
-              x: position.x,
-              y: position.y,
-              velocityY: 0,
-              radius: dot.radius,
-              alpha: dot.alpha * dotVisibility(dot, now),
-              color: dot.color,
-            };
-          }).filter((dot) => dot.alpha > 0 && dot.x + dot.radius >= 0 && dot.x - dot.radius <= width &&
-            dot.y + dot.radius >= 0 && dot.y - dot.radius <= height);
+          fallenDots = dots
+            .map((dot) => {
+              const position = orbitPosition(dot);
+              return {
+                x: position.x,
+                y: position.y,
+                velocityY: 0,
+                radius: dot.radius,
+                alpha: dot.alpha * dotVisibility(dot, now),
+                color: dot.color,
+              };
+            })
+            .filter(
+              (dot) =>
+                dot.alpha > 0 &&
+                dot.x + dot.radius >= 0 &&
+                dot.x - dot.radius <= width &&
+                dot.y + dot.radius >= 0 &&
+                dot.y - dot.radius <= height,
+            );
           if (motionQuery.matches) {
             for (const dot of fallenDots) {
               dot.y = height - dot.radius;
@@ -416,6 +460,9 @@ if (canvas && hero) {
     new ResizeObserver(resize).observe(host);
 
     const themeObserver = new MutationObserver(changeColors);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-palette'] });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'data-palette'],
+    });
   }
 }

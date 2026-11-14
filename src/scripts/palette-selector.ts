@@ -1,6 +1,12 @@
 import {
-  defaultPalette, isPalette, palettes, paletteColors,
-  customColors, isCustomColors, updateCustomColors, type PaletteId,
+  defaultPalette,
+  isPalette,
+  palettes,
+  paletteColors,
+  customColors,
+  isCustomColors,
+  updateCustomColors,
+  type PaletteId,
 } from './palettes';
 
 const slider = document.querySelector<HTMLInputElement>('#bubble-palette');
@@ -21,11 +27,15 @@ if (slider && panel) {
       updateCustomColors(savedColors);
       customConfigured = true;
     }
-  } catch { /* Use the initial swatches if custom colors cannot be restored. */ }
+  } catch {
+    /* Use the initial swatches if custom colors cannot be restored. */
+  }
   try {
     const stored = localStorage.getItem(storageKey);
     if (stored === 'auto' || isPalette(stored)) preference = stored;
-  } catch { /* The slider also works when storage is unavailable. */ }
+  } catch {
+    /* The slider also works when storage is unavailable. */
+  }
 
   let activeId: PaletteId = isPalette(preference) ? preference : defaultPalette();
   if (activeId === 'custom' && !customConfigured) activeId = defaultPalette();
@@ -43,7 +53,11 @@ if (slider && panel) {
   }
 
   function savePreference() {
-    try { localStorage.setItem(storageKey, activeId); } catch { /* Optional persistence. */ }
+    try {
+      localStorage.setItem(storageKey, activeId);
+    } catch {
+      /* Optional persistence. */
+    }
   }
 
   function closeEditor() {
@@ -54,7 +68,9 @@ if (slider && panel) {
   }
 
   function openEditor() {
-    swatches.forEach((swatch, index) => { swatch.value = customColors[index]!; });
+    swatches.forEach((swatch, index) => {
+      swatch.value = customColors[index]!;
+    });
     editor.hidden = false;
     requestAnimationFrame(() => {
       if (palettes[Number(control.value)]?.id !== 'custom') return;
@@ -91,7 +107,11 @@ if (slider && panel) {
     updateCustomColors(colors);
     customConfigured = true;
     apply('custom');
-    try { localStorage.setItem(customStorageKey, JSON.stringify(colors)); } catch { /* Optional persistence. */ }
+    try {
+      localStorage.setItem(customStorageKey, JSON.stringify(colors));
+    } catch {
+      /* Optional persistence. */
+    }
     savePreference();
     closeEditor();
   });
@@ -103,7 +123,11 @@ if (slider && panel) {
     }
   });
   document.addEventListener('pointerdown', (event) => {
-    if (editor.classList.contains('is-open') && event.target instanceof Node &&
-        !editor.contains(event.target)) closeEditor();
+    if (
+      editor.classList.contains('is-open') &&
+      event.target instanceof Node &&
+      !editor.contains(event.target)
+    )
+      closeEditor();
   });
 }
