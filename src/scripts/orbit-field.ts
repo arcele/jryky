@@ -1,28 +1,6 @@
 import { palettes, defaultPalette, paletteColors } from './palettes';
-
-type RGB = [number, number, number];
-type Colors = [RGB, RGB, RGB];
-
-type Dot = {
-  angle: number;
-  distance: number;
-  radius: number;
-  alpha: number;
-  color: 0 | 1 | 2;
-  depth: number;
-  visibilityFrom: number;
-  visibilityTarget: number;
-  visibilityStart: number;
-};
-
-type FallenDot = {
-  x: number;
-  y: number;
-  velocityY: number;
-  radius: number;
-  alpha: number;
-  color: Dot['color'];
-};
+import { ParticleField, type FieldColors } from './particle-field';
+import { createFieldRenderer } from './field-renderer';
 
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
@@ -60,329 +38,117 @@ restoreSlider(speedSlider, 'jryky.dot-speed');
 
 if (canvas && hero) {
   const context = canvas.getContext('2d');
-
   if (context) {
-    const field = canvas;
     const host = hero;
-    const ctx = context;
-    const fallenField = document.querySelector<HTMLCanvasElement>('.fallen-field');
-    const fallenContext = fallenField?.getContext('2d') ?? ctx;
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    let width = 0;
-    let height = 0;
-    let dpr = 1;
+    const renderer = createFieldRenderer(
+      canvas,
+      context,
+      document.querySelector<HTMLCanvasElement>('.fallen-field'),
+    );
+    const particles = new ParticleField({
+      colors: readColors(),
+      density: densitySlider?.valueAsNumber ?? 100,
+      speed: speedSlider?.valueAsNumber ?? 100,
+      reducedMotion: motionQuery.matches,
+    });
     let frameId = 0;
     let lastTime = performance.now();
-    let elapsed = 0;
-    let speedMultiplier = 3 ** (((speedSlider?.valueAsNumber ?? 100) - 100) / 100);
-    let previousDirection = 1;
-    let targetDirection = 1;
-    let directionChangeTime = -Infinity;
 
-    function rotationDirection(time: number) {
-      const progress = Math.min(1, (time - directionChangeTime) / 1000);
-      const eased = (1 - Math.cos(progress * Math.PI)) / 2;
-      return previousDirection + (targetDirection - previousDirection) * eased;
-    }
-
-    let pointerX = 0;
-    let pointerY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let colors: Colors = readColors();
-    let fromColors: Colors = colors;
-    let targetColors: Colors = colors;
-    let transitionStart = -Infinity;
-    const transitionDuration = 800;
-    const fadeOutDuration = 1500;
-    const fadeInDuration = 750;
-    let dots: Dot[] = [];
-    const random = seededRandom(20140925);
-    let createdDotCount = 0;
-    let fieldState: 'orbit' | 'fallen' | 'renewing' = 'orbit';
-    let fallenDots: FallenDot[] = [];
-    let effectTime = 0;
-    let renewalStart = 0;
-    let defaultDotCount = 0;
-    let targetDotCount = 0;
-    function dotVisibility(dot: Dot, time: number) {
-      if (motionQuery.matches) return dot.visibilityTarget;
-      const duration = dot.visibilityTarget > dot.visibilityFrom ? fadeInDuration : fadeOutDuration;
-      const progress = Math.min(1, (time - dot.visibilityStart) / duration);
-      return dot.visibilityFrom + (dot.visibilityTarget - dot.visibilityFrom) * progress;
-    }
-
-    function readColors(): Colors {
+    function readColors(): FieldColors {
       const root = document.documentElement;
       const dark =
         root.dataset.theme === 'dark' || (!root.dataset.theme && colorSchemeQuery.matches);
       const palette =
         palettes.find((item) => item.id === root.dataset.palette) ??
         palettes.find((item) => item.id === defaultPalette())!;
-      return paletteColors(palette, dark).map(
-        (hex) => [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)) as RGB,
-      ) as Colors;
+      return paletteColors(palette, dark).map((hex) =>
+        [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)),
+      ) as FieldColors;
     }
 
-    function interpolateColors(time: number): Colors {
-      const progress = motionQuery.matches
-        ? 1
-        : Math.min(1, (time - transitionStart) / transitionDuration);
-      const eased = progress * progress * (3 - 2 * progress);
-      return targetColors.map(
-        (target, index) =>
-          target.map(
-            (channel, component) =>
-              fromColors[index]![component]! + (channel - fromColors[index]![component]!) * eased,
-          ) as RGB,
-      ) as Colors;
+    function syncDropControl() {
+      if (!dropButton) return;
+      const dropped = particles.phase === 'fallen';
+      dropButton.classList.toggle('is-dropped', dropped);
+      dropButton.disabled = particles.phase === 'renewing';
+      const label = dropped ? 'Create a new dot field' : 'Drop dots';
+      dropButton.setAttribute('aria-label', label);
+      dropButton.title = label;
     }
 
-    function changeColors() {
-      const now = performance.now();
-      // Start from the current blended colors, even during rapid switching.
-      fromColors = interpolateColors(now);
-      targetColors = readColors();
-      transitionStart = now;
-      draw();
-    }
-
-    function seededRandom(seed: number) {
-      let state = seed >>> 0;
-      return () => {
-        state += 0x6d2b79f5;
-        let value = state;
-        value = Math.imul(value ^ (value >>> 15), value | 1);
-        value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
-        return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
-      };
-    }
-
-    function createDot(visible: boolean, time: number): Dot {
-      const depth = createdDotCount++ % 2 === 0 ? 0.55 : 1;
-      const maxDistance = Math.max(width * 0.57, height * 0.8);
-      return {
-        angle: random() * Math.PI * 2,
-        distance: Math.sqrt(random()) * maxDistance,
-        radius: (2.5 + random() * 8) * (0.75 + depth * 0.3),
-        alpha: 0.18 + random() * 0.56,
-        color: Math.floor(random() * 3) as 0 | 1 | 2,
-        depth,
-        visibilityFrom: visible ? 1 : 0,
-        visibilityTarget: 1,
-        visibilityStart: time,
-      };
-    }
-
-    function createDots() {
-      defaultDotCount = width < 600 ? 100 : width < 1000 ? 150 : 220;
-      targetDotCount = Math.round((defaultDotCount * (densitySlider?.valueAsNumber ?? 100)) / 100);
-      dots = Array.from({ length: targetDotCount }, () => createDot(true, -Infinity));
-    }
-
-    function resize() {
-      const bounds = host.getBoundingClientRect();
-      const previousWidth = width;
-      const previousHeight = height;
-      width = bounds.width;
-      height = bounds.height;
-      if (previousWidth && previousHeight) {
-        for (const dot of fallenDots) {
-          dot.x *= width / previousWidth;
-          dot.y = Math.min(height - dot.radius, (dot.y * height) / previousHeight);
-        }
-      }
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      field.width = Math.round(width * dpr);
-      field.height = Math.round(height * dpr);
-      field.style.width = `${width}px`;
-      field.style.height = `${height}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (fallenField) {
-        fallenField.width = field.width;
-        fallenField.height = field.height;
-        fallenField.style.width = field.style.width;
-        fallenField.style.height = field.style.height;
-        fallenContext.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      createDots();
-      start();
-    }
-
-    function orbitPosition(dot: Dot) {
-      const direction = dot.depth === 1 ? 1 : -1;
-      const speed = dot.depth === 1 ? 0.000035 : 0.000018;
-      const angle = dot.angle + elapsed * speed * direction;
-      const stretch = width < 650 ? 0.82 : 1;
-      return {
-        x: width / 2 + pointerX * 20 + Math.cos(angle) * dot.distance * stretch,
-        y: height * 0.43 + pointerY * 12 + Math.sin(angle) * dot.distance * 0.56,
-      };
-    }
-
-    function paintDot(
-      x: number,
-      y: number,
-      radius: number,
-      alpha: number,
-      color: string,
-      layer = ctx,
-    ) {
-      if (alpha <= 0 || x < -30 || x > width + 30 || y < -30 || y > height + 30) return;
-      layer.beginPath();
-      layer.fillStyle = color;
-      layer.globalAlpha = alpha;
-      layer.arc(x, y, radius, 0, Math.PI * 2);
-      layer.fill();
-    }
-
-    function advanceFallenDots(delta: number) {
-      // Small physics steps keep impacts consistent across different frame rates.
-      const steps = Math.ceil(delta / 8);
-      const step = delta / steps;
-      for (const dot of fallenDots) {
-        const floor = height - dot.radius;
-        if (dot.y >= floor && dot.velocityY === 0) continue;
-        const restitution = 0.38 + dot.radius * 0.008;
-        for (let index = 0; index < steps; index++) {
-          dot.velocityY += 0.0014 * step;
-          dot.y += dot.velocityY * step;
-          if (dot.y >= floor) {
-            dot.y = floor;
-            dot.velocityY = -dot.velocityY * restitution;
-            if (Math.abs(dot.velocityY) < 0.06) {
-              dot.velocityY = 0;
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    function draw() {
-      const now = performance.now();
-      // Retire faded dots permanently. New density additions get fresh identities.
-      dots = dots.filter((dot) => dot.visibilityTarget !== 0 || dotVisibility(dot, now) > 0);
-      colors = interpolateColors(now);
-      const fills = colors.map((color) => `rgb(${color.join(', ')})`);
-      ctx.clearRect(0, 0, width, height);
-      if (fallenContext !== ctx) fallenContext.clearRect(0, 0, width, height);
-
-      const renewalAge = motionQuery.matches ? Infinity : effectTime - renewalStart;
-      const fadeOutProgress = Math.min(1, renewalAge / fadeOutDuration);
-      const fadeInProgress = Math.max(
-        0,
-        Math.min(1, (renewalAge - fadeOutDuration) / fadeInDuration),
-      );
-      if (fieldState === 'renewing' && fadeInProgress >= 1) {
-        fallenDots = [];
-        fieldState = 'orbit';
-        if (dropButton) dropButton.disabled = false;
-      }
-
-      if (fieldState !== 'fallen') {
-        const opacity = fieldState === 'renewing' ? fadeInProgress : 1;
-        for (const dot of dots) {
-          const visibility = dotVisibility(dot, now);
-          if (visibility <= 0) continue;
-          const position = orbitPosition(dot);
-          paintDot(
-            position.x,
-            position.y,
-            dot.radius,
-            dot.alpha * visibility * opacity,
-            fills[dot.color]!,
-          );
-        }
-      }
-
-      const oldOpacity = fieldState === 'renewing' ? 1 - fadeOutProgress : 1;
-      for (const dot of fallenDots) {
-        const floor = height - dot.radius;
-        const y = motionQuery.matches ? floor : dot.y;
-        paintDot(dot.x, y, dot.radius, dot.alpha * oldOpacity, fills[dot.color]!, fallenContext);
-      }
-      ctx.globalAlpha = 1;
-      fallenContext.globalAlpha = 1;
+    function render(time = performance.now()) {
+      const previousPhase = particles.phase;
+      particles.update(time);
+      renderer.render(particles.frame(time));
+      if (particles.phase !== previousPhase) syncDropControl();
     }
 
     function animate(time: number) {
       const delta = Math.min(time - lastTime, 50);
       lastTime = time;
-      effectTime += delta;
-      advanceFallenDots(delta);
-      elapsed += delta * speedMultiplier * rotationDirection(time);
-      pointerX += (targetX - pointerX) * 0.035;
-      pointerY += (targetY - pointerY) * 0.035;
-      draw();
+      particles.advance(delta, time);
+      render(time);
       frameId = requestAnimationFrame(animate);
     }
 
     function start() {
       cancelAnimationFrame(frameId);
-      if (motionQuery.matches) {
-        for (const dot of fallenDots) {
-          dot.y = height - dot.radius;
-          dot.velocityY = 0;
-        }
-      }
+      particles.setReducedMotion(motionQuery.matches);
       if (motionQuery.matches || document.hidden) {
-        draw();
+        render();
         return;
       }
       lastTime = performance.now();
       frameId = requestAnimationFrame(animate);
     }
 
+    function resize() {
+      const bounds = host.getBoundingClientRect();
+      renderer.resize(bounds.width, bounds.height, window.devicePixelRatio);
+      particles.resize(bounds.width, bounds.height);
+      start();
+    }
+
+    function changeColors() {
+      const now = performance.now();
+      particles.setColors(readColors(), now);
+      render(now);
+    }
+
     host.addEventListener('pointermove', (event) => {
       const bounds = host.getBoundingClientRect();
-      targetX = (event.clientX - bounds.left) / bounds.width - 0.5;
-      targetY = (event.clientY - bounds.top) / bounds.height - 0.5;
+      particles.setPointer(
+        (event.clientX - bounds.left) / bounds.width - 0.5,
+        (event.clientY - bounds.top) / bounds.height - 0.5,
+      );
     });
-
-    host.addEventListener('pointerleave', () => {
-      targetX = 0;
-      targetY = 0;
-    });
+    host.addEventListener('pointerleave', () => particles.setPointer(0, 0));
 
     if (densitySlider) {
       const slider = densitySlider;
       slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
       slider.closest<HTMLElement>('.density-control')!.hidden = false;
       slider.addEventListener('input', () => {
-        const now = performance.now();
-        targetDotCount = Math.round((defaultDotCount * slider.valueAsNumber) / 100);
-        const activeDots = dots.filter((dot) => dot.visibilityTarget === 1);
-        if (activeDots.length > targetDotCount) {
-          for (const dot of activeDots.slice(targetDotCount)) {
-            dot.visibilityFrom = dotVisibility(dot, now);
-            dot.visibilityTarget = 0;
-            dot.visibilityStart = now;
-          }
-        } else {
-          for (let index = activeDots.length; index < targetDotCount; index++) {
-            dots.push(createDot(false, now));
-          }
-        }
+        particles.setDensity(slider.valueAsNumber, performance.now());
         slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
         try {
           localStorage.setItem('jryky.dot-density', slider.value);
         } catch {
           /* Optional persistence. */
         }
-        if (motionQuery.matches) draw();
+        if (motionQuery.matches) render();
       });
     }
 
     if (speedSlider) {
       const slider = speedSlider;
-      slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
+      slider.setAttribute('aria-valuetext', `${particles.speed.toFixed(2)}× normal speed`);
       slider.closest<HTMLElement>('.speed-control')!.hidden = false;
       slider.addEventListener('input', () => {
-        // Accumulate scaled time so speed changes never jump orbital phase.
-        speedMultiplier = 3 ** ((slider.valueAsNumber - 100) / 100);
-        slider.setAttribute('aria-valuetext', `${speedMultiplier.toFixed(2)}× normal speed`);
+        particles.setSpeed(slider.valueAsNumber);
+        slider.setAttribute('aria-valuetext', `${particles.speed.toFixed(2)}× normal speed`);
         try {
           localStorage.setItem('jryky.dot-speed', slider.value);
         } catch {
@@ -395,12 +161,9 @@ if (canvas && hero) {
       const button = reverseButton;
       button.closest<HTMLElement>('.field-actions')!.hidden = false;
       button.addEventListener('click', () => {
-        const now = performance.now();
-        previousDirection = rotationDirection(now);
-        targetDirection *= -1;
-        directionChangeTime = now;
-        button.classList.toggle('is-reversed', targetDirection < 0);
-        button.setAttribute('aria-pressed', String(targetDirection < 0));
+        particles.reverse(performance.now());
+        button.classList.toggle('is-reversed', particles.reversed);
+        button.setAttribute('aria-pressed', String(particles.reversed));
       });
     }
 
@@ -408,49 +171,9 @@ if (canvas && hero) {
       const button = dropButton;
       button.closest<HTMLElement>('.field-actions')!.hidden = false;
       button.addEventListener('click', () => {
-        if (fieldState === 'renewing') return;
-        if (fieldState === 'orbit') {
-          const now = performance.now();
-          fallenDots = dots
-            .map((dot) => {
-              const position = orbitPosition(dot);
-              return {
-                x: position.x,
-                y: position.y,
-                velocityY: 0,
-                radius: dot.radius,
-                alpha: dot.alpha * dotVisibility(dot, now),
-                color: dot.color,
-              };
-            })
-            .filter(
-              (dot) =>
-                dot.alpha > 0 &&
-                dot.x + dot.radius >= 0 &&
-                dot.x - dot.radius <= width &&
-                dot.y + dot.radius >= 0 &&
-                dot.y - dot.radius <= height,
-            );
-          if (motionQuery.matches) {
-            for (const dot of fallenDots) {
-              dot.y = height - dot.radius;
-              dot.velocityY = 0;
-            }
-          }
-          fieldState = 'fallen';
-          button.classList.add('is-dropped');
-          button.setAttribute('aria-label', 'Create a new dot field');
-          button.title = 'Create a new dot field';
-        } else {
-          createDots();
-          renewalStart = effectTime;
-          fieldState = 'renewing';
-          button.disabled = true;
-          button.classList.remove('is-dropped');
-          button.setAttribute('aria-label', 'Drop dots');
-          button.title = 'Drop dots';
-        }
-        draw();
+        particles.dropOrRenew(performance.now());
+        syncDropControl();
+        render();
       });
     }
 

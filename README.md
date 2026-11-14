@@ -58,3 +58,11 @@ overriding explicit visitor choices.
 The canvas blends palette colors over 800 ms without recreating dots or resetting motion. Rapid
 switches blend from the current colors. Reduced-motion preferences use an immediate color change and
 a static field.
+
+## Header animation modules
+
+- `src/scripts/particle-field.ts` owns particle state, physics, fades, and phase transitions.
+  Settings and time are passed explicitly, and frame snapshots are read-only samples.
+- `src/scripts/field-renderer.ts` sizes the canvas layers and paints those snapshots.
+- `src/scripts/orbit-field.ts` connects controls, preferences, palette changes, and browser
+  lifecycle events to the engine and schedules animation frames.
