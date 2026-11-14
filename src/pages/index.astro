@@ -271,7 +271,7 @@ const structuredData = {
             {projects.map((project) => (
               <li>
                 <div class="project-card">
-                  <span class:list={['project-image', { 'project-image--when-we-match': project.name === 'When We Match', 'project-image--burger': project.name === 'Free Jumbo Jack', 'project-image--nwbhf': project.name === 'Northwest Bubble Hockey' }]} aria-hidden="true">
+                  <span class:list={['project-image', { 'project-image--when-we-match': project.name === 'When We Match', 'project-image--burger': project.name === 'Free Jumbo Jack', 'project-image--nwbhf': project.domain === 'nwbhf.com' }]} aria-hidden="true">
                     <img src={project.image} alt="" width="160" height="160" loading="lazy" />
                   </span>
                   <span class="project-copy">

@@ -93,7 +93,8 @@ if (canvas && hero) {
     const fadeOutDuration = 1500;
     const fadeInDuration = 750;
     let dots: Dot[] = [];
-    let generation = 0;
+    const random = seededRandom(20140925);
+    let createdDotCount = 0;
     let fieldState: 'orbit' | 'fallen' | 'renewing' = 'orbit';
     let fallenDots: FallenDot[] = [];
     let effectTime = 0;
@@ -146,28 +147,26 @@ if (canvas && hero) {
       };
     }
 
+    function createDot(visible: boolean, time: number): Dot {
+      const depth = createdDotCount++ % 2 === 0 ? 0.55 : 1;
+      const maxDistance = Math.max(width * 0.57, height * 0.8);
+      return {
+        angle: random() * Math.PI * 2,
+        distance: Math.sqrt(random()) * maxDistance,
+        radius: (2.5 + random() * 8) * (0.75 + depth * 0.3),
+        alpha: 0.18 + random() * 0.56,
+        color: Math.floor(random() * 3) as 0 | 1 | 2,
+        depth,
+        visibilityFrom: visible ? 1 : 0,
+        visibilityTarget: 1,
+        visibilityStart: time,
+      };
+    }
+
     function createDots() {
-      const random = seededRandom(20140925 + generation);
       defaultDotCount = width < 600 ? 100 : width < 1000 ? 150 : 220;
       targetDotCount = Math.round(defaultDotCount * (densitySlider?.valueAsNumber ?? 100) / 100);
-      // Keep a seeded pool so changing density never regenerates existing dots.
-      const maxCount = Math.round(defaultDotCount * Number(densitySlider?.max ?? 100) / 100);
-      const maxDistance = Math.max(width * 0.57, height * 0.8);
-
-      dots = Array.from({ length: maxCount }, (_, index) => {
-        const depth = index % 2 === 0 ? 0.55 : 1;
-        return {
-          angle: random() * Math.PI * 2,
-          distance: Math.sqrt(random()) * maxDistance,
-          radius: (2.5 + random() * 8) * (0.75 + depth * 0.3),
-          alpha: 0.18 + random() * 0.56,
-          color: Math.floor(random() * 3) as 0 | 1 | 2,
-          depth,
-          visibilityFrom: index < targetDotCount ? 1 : 0,
-          visibilityTarget: index < targetDotCount ? 1 : 0,
-          visibilityStart: -Infinity,
-        };
-      });
+      dots = Array.from({ length: targetDotCount }, () => createDot(true, -Infinity));
     }
 
     function resize() {
@@ -244,6 +243,8 @@ if (canvas && hero) {
 
     function draw() {
       const now = performance.now();
+      // Retire faded dots permanently. New density additions get fresh identities.
+      dots = dots.filter((dot) => dot.visibilityTarget !== 0 || dotVisibility(dot, now) > 0);
       colors = interpolateColors(now);
       const fills = colors.map((color) => `rgb(${color.join(', ')})`);
       ctx.clearRect(0, 0, width, height);
@@ -324,14 +325,18 @@ if (canvas && hero) {
       slider.addEventListener('input', () => {
         const now = performance.now();
         targetDotCount = Math.round(defaultDotCount * slider.valueAsNumber / 100);
-        dots.forEach((dot, index) => {
-          const target = index < targetDotCount ? 1 : 0;
-          if (dot.visibilityTarget === target) return;
-          // Reverse an in-progress fade from its current opacity.
-          dot.visibilityFrom = dotVisibility(dot, now);
-          dot.visibilityTarget = target;
-          dot.visibilityStart = now;
-        });
+        const activeDots = dots.filter((dot) => dot.visibilityTarget === 1);
+        if (activeDots.length > targetDotCount) {
+          for (const dot of activeDots.slice(targetDotCount)) {
+            dot.visibilityFrom = dotVisibility(dot, now);
+            dot.visibilityTarget = 0;
+            dot.visibilityStart = now;
+          }
+        } else {
+          for (let index = activeDots.length; index < targetDotCount; index++) {
+            dots.push(createDot(false, now));
+          }
+        }
         slider.setAttribute('aria-valuetext', `${slider.value}% of default`);
         try { localStorage.setItem('jryky.dot-density', slider.value); } catch { /* Optional persistence. */ }
         if (motionQuery.matches) draw();
@@ -393,7 +398,6 @@ if (canvas && hero) {
           button.setAttribute('aria-label', 'Create a new dot field');
           button.title = 'Create a new dot field';
         } else {
-          generation++;
           createDots();
           renewalStart = effectTime;
           fieldState = 'renewing';
