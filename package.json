@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run format:check && npm run check && npm run build"
+    "validate": "npm run format:check && npm run check && npm test && npm run build",
+    "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

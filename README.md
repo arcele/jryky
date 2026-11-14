@@ -24,9 +24,22 @@ indentation, single quotes, semicolons, and a 100-character line width. Editor s
 in `.editorconfig`. Generated files, public assets, and the npm lockfile are excluded from
 formatting.
 
-Before committing, run `npm run validate`. It checks formatting, runs Astro's TypeScript checks, and
-creates the production build. GitHub Actions runs this command for pull requests and pushes to
-`main`. Netlify uses it before publishing, so a formatting or type-check failure stops the build.
+Before committing, run `npm run validate`. It checks formatting, runs Astro's TypeScript checks,
+runs the regression tests, and creates the production build. GitHub Actions runs this command for
+pull requests and pushes to `main`. Netlify uses it before publishing, so a formatting or type-check
+failure stops the build.
+
+## Regression tests
+
+Run `npm test` for the header behavior suite, or `npm run validate` for all checks. The suite uses
+Node's built-in test runner and the existing TypeScript compiler. It runs the actual page scripts
+with an isolated DOM/canvas fixture and a controlled animation clock, without modifying their source
+or exposing internal state.
+
+Coverage includes speed and reversal continuity, density fades and fresh particles,
+drop/bounce/renewal sequencing, opacity preservation, saved preferences, custom palettes, reduced
+motion, and initial scrolling. These tests verify behavior, not CSS layout, native color-picker
+dialogs, or rendered pixel appearance. Use the local development server for those visual checks.
 
 ## Theme architecture
 
