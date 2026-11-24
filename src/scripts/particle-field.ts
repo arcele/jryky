@@ -1,6 +1,6 @@
 type RGB = [number, number, number];
 export type FieldColors = [RGB, RGB, RGB];
-type FieldPhase = 'orbit' | 'fallen' | 'popping' | 'popped' | 'renewing';
+type FieldPhase = 'orbit' | 'fallen' | 'popping' | 'popped' | 'blowing' | 'blown' | 'renewing';
 
 type Dot = {
   angle: number;
@@ -22,6 +22,8 @@ export type RenderedDot = {
   color: Dot['color'];
 };
 
+type WindDot = RenderedDot & { velocityX: number; velocityY: number };
+
 type FallenDot = RenderedDot & { velocityY: number };
 
 export type FieldFrame = {
@@ -29,6 +31,7 @@ export type FieldFrame = {
   orbit: RenderedDot[];
   fallen: RenderedDot[];
   bursts: RenderedDot[];
+  gust: RenderedDot[];
 };
 
 function seededRandom(seed: number) {
@@ -73,6 +76,9 @@ export class ParticleField {
   private popStart = 0;
   private poppedDots: RenderedDot[] = [];
   private readonly popDuration = 720;
+  private windDots: WindDot[] = [];
+  private windStart = 0;
+  private windDirectionValue: -1 | 1 = 1;
   private densityPercent: number;
   private reducedMotion: boolean;
 
@@ -101,8 +107,18 @@ export class ParticleField {
     return this.targetDirection < 0;
   }
 
+  get windDirection() {
+    return this.windDirectionValue;
+  }
+
   resize(width: number, height: number) {
     if (this.width && this.height) {
+      for (const dot of this.windDots) {
+        dot.x *= width / this.width;
+        dot.y *= height / this.height;
+        dot.velocityX *= width / this.width;
+        dot.velocityY *= height / this.height;
+      }
       for (const dot of this.fallenDots) {
         dot.x *= width / this.width;
         dot.y = Math.min(height - dot.radius, (dot.y * height) / this.height);
@@ -195,6 +211,23 @@ export class ParticleField {
     }
   }
 
+  blowOrRenew(time: number, direction: -1 | 1) {
+    if (this.phaseValue === 'blown') {
+      this.renew(0);
+    } else if (this.phaseValue === 'orbit') {
+      this.windDirectionValue = direction;
+      this.windDots = this.frame(time).orbit.map((dot) => ({
+        ...dot,
+        velocityX: 0,
+        velocityY: 0,
+      }));
+      this.dots = [];
+      this.windStart = this.effectTime;
+      this.phaseValue = this.reducedMotion ? 'blown' : 'blowing';
+      if (this.reducedMotion) this.windDots = [];
+    }
+  }
+
   private renew(delay: number) {
     this.createDots();
     this.renewalStart = this.effectTime;
@@ -205,12 +238,17 @@ export class ParticleField {
   advance(delta: number, time: number) {
     this.effectTime += delta;
     this.advanceFallenDots(delta);
+    this.advanceWindDots(delta);
     this.elapsed += delta * this.speedMultiplier * this.rotationDirection(time);
     this.pointerX += (this.targetX - this.pointerX) * 0.035;
     this.pointerY += (this.targetY - this.pointerY) * 0.035;
   }
 
   update(time: number) {
+    if (this.phaseValue === 'blowing' && (this.reducedMotion || this.windDots.length === 0)) {
+      this.windDots = [];
+      this.phaseValue = 'blown';
+    }
     if (
       this.phaseValue === 'popping' &&
       (this.reducedMotion || this.effectTime - this.popStart >= this.popDuration)
@@ -247,7 +285,20 @@ export class ParticleField {
       alpha: dot.alpha * oldOpacity,
       color: dot.color,
     }));
-    return { colors: this.interpolateColors(time), orbit, fallen, bursts: this.popFragments() };
+    const gust = this.windDots.map(({ x, y, radius, alpha, color }) => ({
+      x,
+      y,
+      radius,
+      alpha,
+      color,
+    }));
+    return {
+      colors: this.interpolateColors(time),
+      orbit,
+      fallen,
+      bursts: this.popFragments(),
+      gust,
+    };
   }
 
   private popFragments(): RenderedDot[] {
@@ -348,6 +399,37 @@ export class ParticleField {
       x: this.width / 2 + this.pointerX * 20 + Math.cos(angle) * dot.distance * stretch,
       y: this.height * 0.43 + this.pointerY * 12 + Math.sin(angle) * dot.distance * 0.56,
     };
+  }
+
+  private advanceWindDots(delta: number) {
+    if (delta <= 0 || this.phaseValue !== 'blowing' || this.reducedMotion) return;
+    const steps = Math.ceil(delta / 8);
+    const step = delta / steps;
+    for (let index = 0; index < steps; index++) {
+      const age = this.effectTime - delta + (index + 1) * step - this.windStart;
+      const strength = 1 - Math.exp(-age / 300);
+      const airX = this.windDirectionValue * Math.max(1.2, this.width / 650) * strength;
+      for (const dot of this.windDots) {
+        const airY = Math.sin(age / 220 + dot.radius) * 0.12 * strength;
+        const relativeX = airX - dot.velocityX;
+        const relativeY = airY - dot.velocityY;
+        // Quadratic drag uses air velocity relative to the particle. Area/mass
+        // scales as 1/r for equal-density spheres; constants are tuned for the UI.
+        // https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/
+        const drag = 0.0018 * (6 / dot.radius);
+        const response = 1 / (1 + drag * Math.hypot(relativeX, relativeY) * step);
+        dot.velocityX = airX - relativeX * response;
+        dot.velocityY = airY - relativeY * response;
+        dot.x += dot.velocityX * step;
+        dot.y += dot.velocityY * step;
+      }
+    }
+    // Keep opacity intact until a bubble has completely passed the canvas edge.
+    this.windDots = this.windDots.filter((dot) =>
+      this.windDirectionValue === 1
+        ? dot.x - dot.radius <= this.width + 32
+        : dot.x + dot.radius >= -32,
+    );
   }
 
   private advanceFallenDots(delta: number) {

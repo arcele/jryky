@@ -145,6 +145,7 @@ export function createPage({
   const reverse = new Element(document, actions);
   const drop = new Element(document, actions);
   const pop = new Element(document, actions);
+  const wind = new Element(document, actions);
   const apply = new Element(document, panel);
   const cancel = new Element(document, panel);
   const swatches = ['#7c3aed', '#db2777', '#f3a9cc'].map(
@@ -169,6 +170,7 @@ export function createPage({
     '#reverse-dots': reverse,
     '#drop-dots': drop,
     '#pop-dots': pop,
+    '#wind-dots': wind,
   };
   document.querySelector = (selector) => selectors[selector] ?? null;
 
@@ -299,6 +301,7 @@ export function createPage({
     reverse,
     drop,
     pop,
+    wind,
     panel,
     swatches,
     apply,

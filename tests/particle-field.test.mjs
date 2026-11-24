@@ -56,3 +56,60 @@ test('sampling a completed renewal does not change phase or expose mutable state
   assert.equal(field.phase, 'orbit');
   assert.equal(field.frame(7250).fallen.length, 0);
 });
+
+test('wind accelerates either way from the existing positions without changing bubble opacity', () => {
+  for (const direction of [-1, 1]) {
+    const field = createField();
+    const original = field.frame(0).orbit;
+    field.blowOrRenew(0, direction);
+    assert.equal(field.windDirection, direction);
+    assert.deepEqual(field.frame(0).gust, original);
+    assert.equal(field.frame(0).orbit.length, 0);
+    const positions = [original[0].x];
+    for (let time = 100; time <= 300; time += 100) {
+      field.advance(100, time);
+      const gust = field.frame(time).gust;
+      positions.push(gust[0].x);
+      for (const dot of gust) {
+        const reference = original.find((before) => before.radius === dot.radius);
+        assert.equal(dot.alpha, reference.alpha);
+        assert.equal(dot.color, reference.color);
+        assert.ok(direction * (dot.x - reference.x) > 0);
+      }
+    }
+    const firstTravel = direction * (positions[1] - positions[0]);
+    const laterTravel = direction * (positions[3] - positions[2]);
+    assert.ok(
+      laterTravel > firstTravel * 2,
+      'The gust should build instead of starting at full speed',
+    );
+    const snapshot = field.frame(300);
+    snapshot.gust[0].x = -999;
+    assert.notEqual(field.frame(300).gust[0].x, -999);
+    field.advance(5000, 5300);
+    field.update(5300);
+    assert.equal(field.phase, 'blown');
+    assert.equal(field.frame(5300).gust.length, 0);
+    field.blowOrRenew(5300, direction);
+    field.advance(750, 6050);
+    field.update(6050);
+    assert.equal(field.phase, 'orbit');
+    assert.equal(field.frame(6050).orbit.length, 100);
+  }
+});
+
+test('wind substeps produce consistent trajectories for different frame lengths', () => {
+  const coarse = createField();
+  const fine = createField();
+  coarse.blowOrRenew(0, 1);
+  fine.blowOrRenew(0, 1);
+  coarse.advance(800, 800);
+  for (let time = 16; time <= 800; time += 16) fine.advance(16, time);
+  const expected = fine.frame(800).gust;
+  const actual = coarse.frame(800).gust;
+  assert.equal(actual.length, expected.length);
+  for (let index = 0; index < actual.length; index++) {
+    assert.ok(Math.abs(actual[index].x - expected[index].x) < 1e-8);
+    assert.ok(Math.abs(actual[index].y - expected[index].y) < 1e-8);
+  }
+});

@@ -4,6 +4,7 @@ import { createFieldRenderer } from './field-renderer';
 
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
+const windButton = document.querySelector<HTMLButtonElement>('#wind-dots');
 const popButton = document.querySelector<HTMLButtonElement>('#pop-dots');
 const dropButton = document.querySelector<HTMLButtonElement>('#drop-dots');
 const reverseButton = document.querySelector<HTMLButtonElement>('#reverse-dots');
@@ -74,15 +75,24 @@ if (canvas && hero) {
       if (popButton) {
         const popped = phase === 'popping' || phase === 'popped';
         popButton.classList.toggle('is-popped', popped);
-        popButton.disabled = phase === 'fallen' || phase === 'popping' || phase === 'renewing';
+        popButton.disabled = phase !== 'orbit' && phase !== 'popped';
         const label = popped ? 'Create a new dot field' : 'Pop dots';
         popButton.setAttribute('aria-label', label);
         popButton.title = label;
       }
+      if (windButton) {
+        const blown = phase === 'blowing' || phase === 'blown';
+        windButton.classList.toggle('wind-left', particles.windDirection === -1);
+        windButton.classList.toggle('is-blown', blown);
+        windButton.disabled = phase !== 'orbit' && phase !== 'blown';
+        const label = blown ? 'Create a new dot field' : 'Blow dots away';
+        windButton.setAttribute('aria-label', label);
+        windButton.title = label;
+      }
       if (!dropButton) return;
       const dropped = particles.phase === 'fallen';
       dropButton.classList.toggle('is-dropped', dropped);
-      dropButton.disabled = phase === 'renewing' || phase === 'popping' || phase === 'popped';
+      dropButton.disabled = phase !== 'orbit' && phase !== 'fallen';
       const label = dropped ? 'Create a new dot field' : 'Drop dots';
       dropButton.setAttribute('aria-label', label);
       dropButton.title = label;
@@ -192,6 +202,16 @@ if (canvas && hero) {
       button.closest<HTMLElement>('.field-actions')!.hidden = false;
       button.addEventListener('click', () => {
         particles.popOrRenew(performance.now());
+        syncActionControls();
+        render();
+      });
+    }
+
+    if (windButton) {
+      const button = windButton;
+      button.closest<HTMLElement>('.field-actions')!.hidden = false;
+      button.addEventListener('click', () => {
+        particles.blowOrRenew(performance.now(), Math.random() < 0.5 ? -1 : 1);
         syncActionControls();
         render();
       });

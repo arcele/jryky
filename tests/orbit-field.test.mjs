@@ -380,3 +380,111 @@ test('pop animation pauses in a hidden tab and survives resizing without restori
   page.advance(750);
   assert.ok(page.orbitDots().length > 100);
 });
+
+test('wind blows bubbles in the icon direction and resets with a fresh fade-in', () => {
+  const page = createPage();
+  const original = page.orbitDots();
+  page.wind.click();
+  const direction = page.wind.classList.contains('wind-left') ? -1 : 1;
+  assert.equal(page.wind.classList.contains('is-blown'), true);
+  assert.equal(page.wind.disabled, true);
+  assert.equal(page.drop.disabled, true);
+  assert.equal(page.pop.disabled, true);
+  sameGeometry(page.orbitDots(), original);
+  page.wind.click();
+  page.advance(200);
+  const initial = byRadius(original);
+  for (const dot of page.orbitDots()) {
+    const before = initial.get(dot.radius);
+    assert.equal(dot.alpha, before.alpha);
+    assert.equal(dot.color, before.color);
+    assert.ok(direction * (dot.x - before.x) > 0);
+  }
+  page.advance(4800);
+  assert.equal(page.orbitDots().length, 0);
+  assert.equal(page.wind.disabled, false);
+  assert.equal(page.wind.getAttribute('aria-label'), 'Create a new dot field');
+
+  page.setSlider(page.density, 50);
+  page.wind.click();
+  assert.equal(page.wind.classList.contains('is-blown'), false);
+  assert.equal(page.wind.disabled, true);
+  assert.equal(page.orbitDots().length, 0);
+  page.advance(375);
+  const halfway = page.orbitDots();
+  assert.equal(halfway.length, 50);
+  page.advance(375);
+  const fresh = byRadius(page.orbitDots());
+  assert.equal(page.wind.disabled, false);
+  assert.equal(page.drop.disabled, false);
+  assert.equal(page.pop.disabled, false);
+  assert.equal(page.wind.getAttribute('aria-label'), 'Blow dots away');
+  for (const dot of halfway) {
+    near(dot.alpha, fresh.get(dot.radius).alpha / 2);
+    assert.equal(initial.has(dot.radius), false, 'Reset generates new bubbles');
+  }
+  page.wind.click();
+  page.advance(5000);
+  assert.equal(page.orbitDots().length, 0, 'Repeated wind cycles finish normally');
+});
+
+test('wind and other empty-field effects cannot interrupt each other', () => {
+  const page = createPage();
+  page.drop.click();
+  assert.equal(page.wind.disabled, true);
+  page.wind.click();
+  assert.ok(page.fallenDots().length > 0);
+  page.drop.click();
+  page.advance(2250);
+  page.pop.click();
+  assert.equal(page.wind.disabled, true);
+  page.advance(720);
+  assert.equal(page.wind.disabled, true);
+  page.pop.click();
+  page.advance(750);
+  page.wind.click();
+  page.drop.click();
+  page.pop.click();
+  page.advance(5000);
+  assert.equal(page.orbitDots().length, 0);
+  assert.equal(page.fallenDots().length, 0);
+  assert.equal(page.wind.disabled, false);
+});
+
+test('reduced motion skips the gust and restores immediately, including mid-gust changes', () => {
+  for (const reducedMotion of [true, false]) {
+    const page = createPage({ reducedMotion });
+    page.wind.click();
+    if (!reducedMotion) {
+      page.advance(100);
+      page.setReducedMotion(true);
+    }
+    assert.equal(page.orbitDots().length, 0);
+    assert.equal(page.wind.disabled, false);
+    page.wind.click();
+    assert.equal(page.orbitDots().length, 100);
+    assert.equal(page.wind.disabled, false);
+    assert.equal(page.wind.classList.contains('is-blown'), false);
+  }
+});
+
+test('wind pauses in a hidden tab and stays empty after resizing once blown away', () => {
+  const page = createPage();
+  page.wind.click();
+  page.advance(200);
+  const before = page.orbitDots();
+  page.setHidden(true);
+  page.advance(5000);
+  assert.deepEqual(page.orbitDots(), before);
+  assert.equal(page.wind.disabled, true);
+  page.setHidden(false);
+  page.resize(1200, 600);
+  page.advance(5000);
+  assert.equal(page.orbitDots().length, 0);
+  assert.equal(page.wind.disabled, false);
+  page.resize(599, 450);
+  assert.equal(page.orbitDots().length, 0);
+  page.wind.click();
+  page.advance(750);
+  assert.equal(page.orbitDots().length, 100);
+});

@@ -442,7 +442,8 @@ h1 {
 }
 
 .drop-icon-window,
-.pop-icon-window {
+.pop-icon-window,
+.wind-icon-window {
   position: relative;
   display: block;
   width: 1.1rem;
@@ -450,7 +451,8 @@ h1 {
   overflow: hidden;
 }
 .drop-icon-window svg,
-.pop-icon-window svg {
+.pop-icon-window svg,
+.wind-icon-window svg {
   position: absolute;
   inset: 0;
   transition: transform 500ms ease-in-out;
@@ -508,6 +510,26 @@ h1 {
     opacity: 0;
     transform: scale(1.5) rotate(30deg);
   }
+}
+.wind-left {
+  --wind-facing: -1;
+  --wind-shift: -160%;
+}
+.wind-icon-window .wind-gust {
+  transform: translateX(0) scaleX(var(--wind-facing, 1));
+  transition: transform 350ms ease-out;
+}
+.wind-reset-dot {
+  transform: translateY(150%);
+}
+.is-blown .wind-gust {
+  transform: translateX(var(--wind-shift, 160%)) scaleX(var(--wind-facing, 1));
+  transition: transform 700ms cubic-bezier(0.55, 0.05, 0.9, 0.5);
+}
+.is-blown .wind-reset-dot {
+  transform: translateY(0);
+  transition-duration: 250ms;
+  transition-delay: 650ms;
 }
 .field-actions button:disabled {
   opacity: 0.5;
@@ -946,7 +968,10 @@ footer p {
   .drop-icon-window svg,
   .pop-icon-window svg,
   .pop-icon-window .pop-bomb,
-  .pop-icon-window .pop-reset-dot {
+  .pop-icon-window .pop-reset-dot,
+  .wind-icon-window svg,
+  .wind-icon-window .wind-gust,
+  .wind-icon-window .wind-reset-dot {
     transition: none;
   }
 
