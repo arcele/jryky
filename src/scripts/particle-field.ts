@@ -1,6 +1,6 @@
 type RGB = [number, number, number];
 export type FieldColors = [RGB, RGB, RGB];
-type FieldPhase = 'orbit' | 'fallen' | 'renewing';
+type FieldPhase = 'orbit' | 'fallen' | 'popping' | 'popped' | 'renewing';
 
 type Dot = {
   angle: number;
@@ -28,6 +28,7 @@ export type FieldFrame = {
   colors: FieldColors;
   orbit: RenderedDot[];
   fallen: RenderedDot[];
+  bursts: RenderedDot[];
 };
 
 function seededRandom(seed: number) {
@@ -68,6 +69,10 @@ export class ParticleField {
   private createdDotCount = 0;
   private phaseValue: FieldPhase = 'orbit';
   private renewalStart = 0;
+  private renewalDelay = this.fadeOutDuration;
+  private popStart = 0;
+  private poppedDots: RenderedDot[] = [];
+  private readonly popDuration = 720;
   private densityPercent: number;
   private reducedMotion: boolean;
 
@@ -157,7 +162,7 @@ export class ParticleField {
   }
 
   dropOrRenew(time: number) {
-    if (this.phaseValue === 'renewing') return;
+    if (this.phaseValue !== 'orbit' && this.phaseValue !== 'fallen') return;
     if (this.phaseValue === 'orbit') {
       this.fallenDots = this.frame(time)
         .orbit.filter(
@@ -174,10 +179,27 @@ export class ParticleField {
         }));
       this.phaseValue = 'fallen';
     } else {
-      this.createDots();
-      this.renewalStart = this.effectTime;
-      this.phaseValue = 'renewing';
+      this.renew(this.fadeOutDuration);
     }
+  }
+
+  popOrRenew(time: number) {
+    if (this.phaseValue === 'popped') {
+      this.renew(0);
+    } else if (this.phaseValue === 'orbit') {
+      this.poppedDots = this.frame(time).orbit;
+      this.dots = [];
+      this.popStart = this.effectTime;
+      this.phaseValue = this.reducedMotion ? 'popped' : 'popping';
+      if (this.reducedMotion) this.poppedDots = [];
+    }
+  }
+
+  private renew(delay: number) {
+    this.createDots();
+    this.renewalStart = this.effectTime;
+    this.renewalDelay = delay;
+    this.phaseValue = 'renewing';
   }
 
   advance(delta: number, time: number) {
@@ -189,6 +211,13 @@ export class ParticleField {
   }
 
   update(time: number) {
+    if (
+      this.phaseValue === 'popping' &&
+      (this.reducedMotion || this.effectTime - this.popStart >= this.popDuration)
+    ) {
+      this.poppedDots = [];
+      this.phaseValue = 'popped';
+    }
     this.dots = this.dots.filter(
       (dot) => dot.visibilityTarget !== 0 || this.dotVisibility(dot, time) > 0,
     );
@@ -202,7 +231,7 @@ export class ParticleField {
   frame(time: number): FieldFrame {
     const { fadeIn, fadeOut } = this.renewalProgress();
     const orbit: RenderedDot[] = [];
-    if (this.phaseValue !== 'fallen') {
+    if (this.phaseValue === 'orbit' || this.phaseValue === 'renewing') {
       const opacity = this.phaseValue === 'renewing' ? fadeIn : 1;
       for (const dot of this.dots) {
         const alpha = dot.alpha * this.dotVisibility(dot, time) * opacity;
@@ -218,7 +247,32 @@ export class ParticleField {
       alpha: dot.alpha * oldOpacity,
       color: dot.color,
     }));
-    return { colors: this.interpolateColors(time), orbit, fallen };
+    return { colors: this.interpolateColors(time), orbit, fallen, bursts: this.popFragments() };
+  }
+
+  private popFragments(): RenderedDot[] {
+    if (this.phaseValue !== 'popping' || this.reducedMotion) return [];
+    const age = this.effectTime - this.popStart;
+    return this.poppedDots.flatMap((dot, index) => {
+      // A short stagger and inflation make each bubble rupture rather than vanish.
+      const localAge = age - (index % 7) * 20;
+      if (localAge < 80) {
+        return [{ ...dot, radius: dot.radius * (1 + Math.max(0, localAge) / 400) }];
+      }
+      const progress = Math.min(1, (localAge - 80) / 520);
+      if (progress >= 1) return [];
+      return Array.from({ length: 7 }, (_, fragment) => {
+        const angle = (fragment / 7) * Math.PI * 2 + index;
+        const distance = dot.radius * (1 + 4 * (1 - (1 - progress) ** 2));
+        return {
+          x: dot.x + Math.cos(angle) * distance,
+          y: dot.y + Math.sin(angle) * distance + progress * progress * 12,
+          radius: dot.radius * 0.22 * (1 - progress),
+          alpha: dot.alpha * (1 - progress),
+          color: dot.color,
+        };
+      });
+    });
   }
 
   private targetDotCount() {
@@ -281,7 +335,7 @@ export class ParticleField {
     const age = this.reducedMotion ? Infinity : this.effectTime - this.renewalStart;
     return {
       fadeOut: Math.min(1, age / this.fadeOutDuration),
-      fadeIn: Math.max(0, Math.min(1, (age - this.fadeOutDuration) / this.fadeInDuration)),
+      fadeIn: Math.max(0, Math.min(1, (age - this.renewalDelay) / this.fadeInDuration)),
     };
   }
 

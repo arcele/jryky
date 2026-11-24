@@ -43,6 +43,7 @@ export function createFieldRenderer(
       if (fallenContext !== context) fallenContext.clearRect(0, 0, width, height);
       for (const dot of frame.orbit) paint(dot, fills, context);
       for (const dot of frame.fallen) paint(dot, fills, fallenContext);
+      for (const dot of frame.bursts) paint(dot, fills, context);
       context.globalAlpha = 1;
       fallenContext.globalAlpha = 1;
     },

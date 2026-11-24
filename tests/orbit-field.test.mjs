@@ -285,3 +285,98 @@ test('enabling reduced motion during renewal completes the transition immediatel
   assert.equal(page.drop.disabled, false);
   assert.equal(page.pendingFrames(), 0);
 });
+
+test('popping bursts the existing bubbles then fades in a fresh field on reset', () => {
+  const page = createPage();
+  const original = page.orbitDots();
+  page.pop.click();
+  assert.equal(page.pop.classList.contains('is-popped'), true);
+  assert.equal(page.pop.disabled, true);
+  assert.equal(page.drop.disabled, true);
+  sameGeometry(page.orbitDots(), original);
+  page.pop.click(); // Repeated clicks cannot interrupt the burst.
+  page.advance(250);
+  const fragments = page.orbitDots();
+  assert.ok(fragments.length > original.length);
+  assert.ok(fragments.every((dot) => dot.radius < 3));
+  page.advance(470);
+  assert.equal(page.orbitDots().length, 0);
+  assert.equal(page.pop.disabled, false);
+  assert.equal(page.pop.getAttribute('aria-label'), 'Create a new dot field');
+
+  page.setSlider(page.density, 150);
+  page.pop.click();
+  assert.equal(page.pop.classList.contains('is-popped'), false);
+  assert.equal(page.pop.disabled, true);
+  assert.equal(page.orbitDots().length, 0);
+  page.advance(375);
+  const halfway = page.orbitDots();
+  assert.equal(halfway.length, 150);
+  page.advance(375);
+  const fresh = page.orbitDots();
+  assert.equal(page.pop.disabled, false);
+  assert.equal(page.drop.disabled, false);
+  assert.equal(page.pop.getAttribute('aria-label'), 'Pop dots');
+  assert.ok(fresh.every((dot) => !byRadius(original).has(dot.radius)));
+  const final = byRadius(fresh);
+  for (const dot of halfway) near(dot.alpha, final.get(dot.radius).alpha / 2);
+
+  page.pop.click();
+  page.advance(720);
+  assert.equal(page.orbitDots().length, 0, 'A second pop cycle completes normally');
+});
+
+test('drop and pop controls cannot start conflicting empty-field effects', () => {
+  const page = createPage();
+  page.drop.click();
+  assert.equal(page.pop.disabled, true);
+  page.pop.click();
+  assert.ok(page.fallenDots().length > 0);
+  page.drop.click();
+  page.advance(2250);
+  assert.equal(page.pop.disabled, false);
+  page.pop.click();
+  page.advance(720);
+  page.drop.click();
+  assert.equal(page.fallenDots().length, 0);
+  assert.equal(page.orbitDots().length, 0);
+  page.pop.click();
+  page.advance(750);
+  page.drop.click();
+  assert.ok(page.fallenDots().length > 0, 'Drop works after a pop/reset cycle');
+});
+
+test('reduced motion pops and restores immediately, including a mid-burst preference change', () => {
+  for (const reducedMotion of [true, false]) {
+    const page = createPage({ reducedMotion });
+    page.pop.click();
+    if (!reducedMotion) {
+      page.advance(100);
+      page.setReducedMotion(true);
+    }
+    assert.equal(page.orbitDots().length, 0);
+    assert.equal(page.pop.disabled, false);
+    page.pop.click();
+    assert.equal(page.orbitDots().length, 100);
+    assert.equal(page.pop.disabled, false);
+    assert.equal(page.drop.disabled, false);
+  }
+});
+
+test('pop animation pauses in a hidden tab and survives resizing without restoring bubbles', () => {
+  const page = createPage();
+  page.pop.click();
+  page.advance(250);
+  const fragments = page.orbitDots();
+  page.setHidden(true);
+  page.advance(5000);
+  assert.deepEqual(page.orbitDots(), fragments);
+  page.setHidden(false);
+  page.advance(470);
+  assert.equal(page.pop.disabled, false);
+  page.resize(1200, 600);
+  assert.equal(page.orbitDots().length, 0);
+  page.pop.click();
+  page.advance(750);
+  assert.ok(page.orbitDots().length > 100);
+});

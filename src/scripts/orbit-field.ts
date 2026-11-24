@@ -4,6 +4,7 @@ import { createFieldRenderer } from './field-renderer';
 
 const canvas = document.querySelector<HTMLCanvasElement>('.orbit-field');
 const hero = document.querySelector<HTMLElement>('.hero');
+const popButton = document.querySelector<HTMLButtonElement>('#pop-dots');
 const dropButton = document.querySelector<HTMLButtonElement>('#drop-dots');
 const reverseButton = document.querySelector<HTMLButtonElement>('#reverse-dots');
 const speedSlider = document.querySelector<HTMLInputElement>('#dot-speed');
@@ -68,11 +69,20 @@ if (canvas && hero) {
       ) as FieldColors;
     }
 
-    function syncDropControl() {
+    function syncActionControls() {
+      const phase = particles.phase;
+      if (popButton) {
+        const popped = phase === 'popping' || phase === 'popped';
+        popButton.classList.toggle('is-popped', popped);
+        popButton.disabled = phase === 'fallen' || phase === 'popping' || phase === 'renewing';
+        const label = popped ? 'Create a new dot field' : 'Pop dots';
+        popButton.setAttribute('aria-label', label);
+        popButton.title = label;
+      }
       if (!dropButton) return;
       const dropped = particles.phase === 'fallen';
       dropButton.classList.toggle('is-dropped', dropped);
-      dropButton.disabled = particles.phase === 'renewing';
+      dropButton.disabled = phase === 'renewing' || phase === 'popping' || phase === 'popped';
       const label = dropped ? 'Create a new dot field' : 'Drop dots';
       dropButton.setAttribute('aria-label', label);
       dropButton.title = label;
@@ -82,7 +92,7 @@ if (canvas && hero) {
       const previousPhase = particles.phase;
       particles.update(time);
       renderer.render(particles.frame(time));
-      if (particles.phase !== previousPhase) syncDropControl();
+      if (particles.phase !== previousPhase) syncActionControls();
     }
 
     function animate(time: number) {
@@ -172,7 +182,17 @@ if (canvas && hero) {
       button.closest<HTMLElement>('.field-actions')!.hidden = false;
       button.addEventListener('click', () => {
         particles.dropOrRenew(performance.now());
-        syncDropControl();
+        syncActionControls();
+        render();
+      });
+    }
+
+    if (popButton) {
+      const button = popButton;
+      button.closest<HTMLElement>('.field-actions')!.hidden = false;
+      button.addEventListener('click', () => {
+        particles.popOrRenew(performance.now());
+        syncActionControls();
         render();
       });
     }

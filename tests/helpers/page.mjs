@@ -144,6 +144,7 @@ export function createPage({
   const speed = new Input(document, speedContainer, { min: '0', max: '200' });
   const reverse = new Element(document, actions);
   const drop = new Element(document, actions);
+  const pop = new Element(document, actions);
   const apply = new Element(document, panel);
   const cancel = new Element(document, panel);
   const swatches = ['#7c3aed', '#db2777', '#f3a9cc'].map(
@@ -167,6 +168,7 @@ export function createPage({
     '#dot-speed': speed,
     '#reverse-dots': reverse,
     '#drop-dots': drop,
+    '#pop-dots': pop,
   };
   document.querySelector = (selector) => selectors[selector] ?? null;
 
@@ -296,6 +298,7 @@ export function createPage({
     speed,
     reverse,
     drop,
+    pop,
     panel,
     swatches,
     apply,
